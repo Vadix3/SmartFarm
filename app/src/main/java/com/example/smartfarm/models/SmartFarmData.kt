@@ -12,7 +12,7 @@ package com.example.smartfarm.models
  * uv - Int, the measured uv exposure
  * */
 
-class MeasuredData() {
+class SmartFarmData() {
     var device: String = ""
     var date: String = ""
     var time: String = ""

@@ -1,4 +1,50 @@
 <resources>
     <string name="app_name">SmartFarm</string>
     <string name="app_id">smartfarm-thpgu</string>
+
+    <string name="home">Home</string>
+    <string name="networks">Networks</string>
+    <string name="settings">Settings</string>
+
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+
+    <string name="new_network">New Network</string>
+
+    <string name="my_networks">My Networks</string>
+
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="submit">Submit</string>
+    <string name="create_account">Create Account</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="create">Create</string>
+
+    <string name="please_enter_deviceID">Please enter device ID</string>
+
+    <string name="device_id">Device ID</string>
+    <string name="device_name">Device Name</string>
+
+    <string name="devices">Devices</string>
+
+    <string name="network_name">Network Name</string>
+
+    <string name="no_networks">Hmm, no networks. Would you like to add a new network?</string>
+
+    <string name="credits">Goodware, Freepik, Becris</string>
+
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="humidity">Humidity</string>
+    <string name="temperature">Temperature</string>
+    <string name="soil_moisture">Soil Moisture</string>
+    <string name="light_exposure">Light Exposure</string>
+    <string name="uv_exposure">UV Exposure</string>
+
 </resources>
