@@ -3,7 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.15364583333333334" />
+        <entry key="app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/drawable/ic_baseline_network_on_24.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/drawable/selected_item_selector.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/device_row.xml" value="0.20364583333333333" />
+        <entry key="app/src/main/res/layout/dialog_first_network.xml" value="0.16822916666666668" />
+        <entry key="app/src/main/res/layout/dialog_new_network.xml" value="0.175" />
+        <entry key="app/src/main/res/layout/fragment_data.xml" value="0.24974643543426583" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.14324796918724347" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_network_details.xml" value="0.20364583333333333" />
+        <entry key="app/src/main/res/layout/fragment_networks.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/fragment_new_network.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.2563405797101449" />
+        <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/network_row.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.20364583333333333" />
       </map>
     </option>
   </component>

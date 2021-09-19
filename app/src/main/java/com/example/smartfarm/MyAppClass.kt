@@ -10,17 +10,13 @@ import io.realm.mongodb.AppConfiguration
 
 class MyAppClass: Application() {
 
-
     object Constants {
         const val TAG = "myTag"
-
-    }
-
-
-    companion object Functions {
-        fun displayToast(myContext: Context, message: String) {
-            Toast.makeText(myContext, message, Toast.LENGTH_LONG).show()
-        }
+        const val dbName = "testdb"
+        const val dataCollection = "data"
+        const val devicesCollection = "devices"
+        const val networksCollection = "networks"
+        var userEmail = ""
     }
 
 }
