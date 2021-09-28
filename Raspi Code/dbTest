@@ -18,7 +18,22 @@ spi.max_speed_hz=1000000
 cluster = MongoClient("mongodb+srv://Vadix3:Vx121212@cluster0.mcatx.mongodb.net/testdb?retryWrites=true&w=majority") # Mongo client 
 db = cluster["testdb"] # Selected mongo cluster
 collection = db["data"] # Selected collection
+
+def getserial():
+  # Extract serial from cpuinfo file
+  cpuserial = "0000000000000000"
+  try:
+    f = open('/proc/cpuinfo','r')
+    for line in f:
+      if line[0:6]=='Serial':
+        cpuserial = line[10:26]
+    f.close()
+  except:
+    cpuserial = "ERROR000000000"
  
+  return cpuserial
+ 
+
 # A method that will receive a channel to read from and will return the read value from the sensor in that channel
 def readChannel(channel): 
   val = spi.xfer2([1,(8+channel)<<4,0])
@@ -61,6 +76,7 @@ if __name__ == "__main__":
 
       # insert
       data = {
+	"device":getserial(),
         "date": time.strftime('%d/%m/%y'),
         "time": time.strftime('%H:%M:%S'),
         "humidity":humidity,
