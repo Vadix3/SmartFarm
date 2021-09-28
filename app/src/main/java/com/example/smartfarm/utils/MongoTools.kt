@@ -34,6 +34,33 @@ object MongoTools {
         app = App(AppConfiguration.Builder(appID).build())
     }
 
+    /** This function will check if the given queried document exists in the given db anc collection*/
+    fun checkExistingDocument(
+        database: String,
+        collection: String,
+        query: Document,
+        resultListener: ResultListener
+    ) {
+        Log.d(TAG, "checkExistingDocument: MONGOTOOLS")
+        val mongoClient: MongoClient =
+            user.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(database)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(collection)!!
+        mongoCollection.findOne(query).getAsync { result ->
+            if (result.isSuccess) {
+                if (result.get().getBoolean("active")) { // if the device is already active
+                    resultListener.result(false, "Device already active!")
+                } else {
+                    resultListener.result(true, result.get().getString("did"))
+                }
+            } else {
+                resultListener.result(false, result.error.toString())
+            }
+        }
+    }
+
     /**
      * This method will fetch the latest entry in the specified collection in the Mongo database
      * and will return it in a JSON form to the caller
@@ -84,6 +111,30 @@ object MongoTools {
                 Log.i(TAG, "Successfully registered user.")
                 Toast.makeText(context, "User created successfully!", Toast.LENGTH_SHORT).show()
                 resultListener.result(true, "Success: $it")
+            }
+        }
+    }
+
+    /** This method will update the given queried document with the given document*/
+    fun updateDocument(
+        database: String,
+        collection: String,
+        document: Document,
+        query:Document,
+        resultListener: ResultListener
+    ) {
+        Log.d(TAG, "putDocument: MongoTools $document query: $query")
+        val mongoClient: MongoClient =
+            user.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(database)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(collection)!!
+        mongoCollection.updateOne(query,document).getAsync{result->
+            if(result.isSuccess){
+                resultListener.result(true,result.get().toString())
+            }else{
+                resultListener.result(false,result.error.toString())
             }
         }
     }

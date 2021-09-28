@@ -82,10 +82,13 @@ class NetworksFragment(mContext: Context) : Fragment() {
                 openNewNetworkDialog()
             }
         })
-        dialog.show()
-        val width = (mContext.resources.displayMetrics.widthPixels * 0.9).toInt()
-        dialog.window!!.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
-        dialog.window!!.setDimAmount(0.9f)
+        CodingTools.openDialog(
+            mContext,
+            dialog,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            (mContext.resources.displayMetrics.widthPixels * 0.9).toInt(),
+            0.9f
+        )
     }
 
     /** This method will present the new network dialog, and will return with the result of the
@@ -99,18 +102,21 @@ class NetworksFragment(mContext: Context) : Fragment() {
                 putNetworkToDb(network)
             }
         })
-        dialog.show()
-        val width = (mContext.resources.displayMetrics.widthPixels * 0.9).toInt()
-        dialog.window!!.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
-        dialog.window!!.setDimAmount(0.9f)
+        CodingTools.openDialog(
+            mContext,
+            dialog,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            (mContext.resources.displayMetrics.widthPixels * 0.9).toInt(),
+            0.9f
+        )
     }
 
     /** This method will take the network object and will upload it to the cloud*/
     private fun putNetworkToDb(network: SmartFarmNetwork) {
         Log.d(TAG, "putNetworkToDb: ")
         dataController.insertDocument(
-            MyAppClass.Constants.dbName,
-            MyAppClass.Constants.networksCollection,
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.NETWORKS_COLLECTION,
             network,
             object : ResultListener {
                 override fun result(result: Boolean, message: String) {

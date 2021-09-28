@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             LoginFragment(this, object : LoginListener {
                 /** After the user logged in, the program will update the UI from here*/
                 override fun moveToMain(email: String) {
-                    MyAppClass.Constants.userEmail=email // Save the users email for future use
+                    MyAppClass.Constants.USER_EMAIL=email // Save the users email for future use
                     runOnUiThread {
                         initFragments()
                         initBottomBar()

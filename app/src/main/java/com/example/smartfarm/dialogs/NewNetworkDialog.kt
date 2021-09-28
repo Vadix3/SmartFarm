@@ -74,7 +74,7 @@ class NewNetworkDialog(mContext: Context, listener: NetworkCallback) : Dialog(mC
     private fun addNewNetwork() {
         Log.d(MyAppClass.Constants.TAG, "addNewNetwork: ")
         val data = SmartFarmNetwork()
-        data.owner = MyAppClass.Constants.userEmail
+        data.owner = MyAppClass.Constants.USER_EMAIL
         data.name = nameBox.text.toString()
         data.devices = deviceList
         listener.getNetwork(data)

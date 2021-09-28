@@ -7,15 +7,11 @@ import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.interfaces.*
 import com.example.smartfarm.models.SmartFarmDevice
 import com.example.smartfarm.models.SmartFarmNetwork
-import com.example.smartfarm.utils.CodingTools
 import com.example.smartfarm.utils.MongoTools
 import com.example.smartfarm.utils.ParsingTools
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.bson.Document
 import org.bson.types.ObjectId
 import org.json.JSONObject
-import java.lang.reflect.Type
 
 /** The class will perform the needed actions to get the data from the server*/
 class DataController(context: Context) {
@@ -31,8 +27,8 @@ class DataController(context: Context) {
         val query = Document("device", device)
 
         tools.fetchLastDocument(
-            MyAppClass.Constants.dbName,
-            MyAppClass.Constants.dataCollection,
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.DATA_COLLECTION,
             query,
             object : ResultListener {
                 override fun result(result: Boolean, message: String) {
@@ -48,6 +44,50 @@ class DataController(context: Context) {
                 }
             })
     }
+
+
+    fun checkExistingDocument(
+        database: String,
+        collection: String,
+        did: String,
+        resultListener: ResultListener
+    ) {
+        Log.d(TAG, "checkExistingDocument: Controller")
+        tools.checkExistingDocument(database, collection, Document("did", did), resultListener)
+    }
+
+    /** This function will send a document to MongoTools that will insert it to the cloud*/
+    fun initDevice(
+        device: SmartFarmDevice,
+        resultListener: ResultListener
+    ) {
+        Log.d(TAG, "initDevice: Controller")
+        tools.updateDocument(
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.DEVICES_COLLECTION,
+            ParsingTools.deviceToDocument(device),
+            Document("did", device.did),
+            resultListener
+        )
+    }
+
+    /** This function will add the given did to the selected network*/
+    fun addDeviceToNetwork(
+        did: String,
+        network:SmartFarmNetwork,
+        resultListener: ResultListener
+    ) {
+        Log.d(TAG, "initDevice: Controller")
+        network.devices.add(did)
+        tools.updateDocument(
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.NETWORKS_COLLECTION,
+            ParsingTools.networkToDocument(network),
+            Document("_id", ObjectId(network.id)),
+            resultListener
+        )
+    }
+
 
     /** This function will send a document to MongoTools that will insert it to the cloud*/
     fun insertDocument(
@@ -76,12 +116,12 @@ class DataController(context: Context) {
      * the method will send a query with the users email and will
      * fetch all the networks that their owner is the user*/
     fun fetchUsersNetworks(listener: NetworkListCallback) {
-        val userEmail = MyAppClass.Constants.userEmail
+        val userEmail = MyAppClass.Constants.USER_EMAIL
         Log.d(TAG, "fetchUsersNetworks: fetching networks for: $userEmail")
         val query = Document("owner", userEmail)
         tools.fetchDocuments(
-            MyAppClass.Constants.dbName,
-            MyAppClass.Constants.networksCollection,
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.NETWORKS_COLLECTION,
             query,
             object : DocumentListListener {
                 override fun getDocuments(result: Boolean, list: ArrayList<Document>?) {
@@ -108,15 +148,18 @@ class DataController(context: Context) {
         val list = network.devices // The list of the device ID's to fetch from the server
         val query = Document("did", Document("\$in", list))
         tools.fetchDocuments(
-            MyAppClass.Constants.dbName,
-            MyAppClass.Constants.devicesCollection,
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.DEVICES_COLLECTION,
             query,
             object : DocumentListListener {
                 override fun getDocuments(result: Boolean, list: ArrayList<Document>?) {
                     if (result) { // got documents
                         val devicesList = arrayListOf<SmartFarmDevice>()
                         for (item in list!!) {
-                            devicesList.add(ParsingTools.parseDevice(item))
+                            val device = ParsingTools.parseDevice(item)
+                            if (device.active) { // add only active devices
+                                devicesList.add(ParsingTools.parseDevice(item))
+                            }
                         }
                         // Return the network list
                         deviceListCallback.getDevices(true, devicesList)
