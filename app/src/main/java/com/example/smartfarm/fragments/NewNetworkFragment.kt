@@ -80,7 +80,7 @@ class NewNetworkFragment(mContext: Context) : Fragment() {
     private fun addNewNetwork() {
         Log.d(TAG, "addNewNetwork: ")
         val data = SmartFarmNetwork()
-        data.owner = MyAppClass.Constants.userEmail
+        data.owner = MyAppClass.Constants.USER_EMAIL
         data.name = nameBox.text.toString()
         data.devices = deviceList
         Log.d(TAG, "addNewNetwork: Adding data: $data")

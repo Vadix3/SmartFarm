@@ -12,8 +12,12 @@
 
 
     <string name="new_network">New Network</string>
-
+    <string name="new_device">New Device</string>
+    <string name="device_description">Description</string>
+    <string name="wrong_id">Wrong ID</string>
     <string name="my_networks">My Networks</string>
+    <string name="device_already_active">Device already active</string>
+    <string name="there_are_no_devices">There are no devices in this network</string>
 
     <string name="name">Name</string>
     <string name="email">Email</string>
@@ -37,7 +41,7 @@
 
     <string name="no_networks">Hmm, no networks. Would you like to add a new network?</string>
 
-    <string name="credits">Goodware, Freepik, Becris</string>
+    <string name="credits">Goodware, Freepik, Becris, pixelmeetup</string>
 
     <string name="date">Date</string>
     <string name="time">Time</string>
@@ -46,5 +50,6 @@
     <string name="soil_moisture">Soil Moisture</string>
     <string name="light_exposure">Light Exposure</string>
     <string name="uv_exposure">UV Exposure</string>
+    <string name="scan_barcode">Scan QR code</string>
 
 </resources>
