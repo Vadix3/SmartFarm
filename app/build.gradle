@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'realm-android'
+    id 'com.google.secrets_gradle_plugin' version '0.4'
+
 }
 
 android {
@@ -47,9 +49,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     implementation 'com.google.code.gson:gson:2.8.8' // json stuff
     implementation("io.github.g00fy2.quickie:quickie-bundled:1.2.4") // qr scanner
     implementation 'com.karumi:dexter:6.2.2' // permissions library
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0")) // Okhttp
+    implementation 'com.github.bumptech.glide:glide:4.12.0' // Glide
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'// Glide
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"// Progress drawable
+
 
 }

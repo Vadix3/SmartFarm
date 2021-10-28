@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="400dp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/newDevice_LAY_deviceId"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newDevice_LAY_deviceId"
-        app:layout_constraintVertical_bias="0.062"
+        app:layout_constraintVertical_bias="0.07"
         app:startIconDrawable="@drawable/ic_baseline_create_24"
         app:startIconTint="@color/colorPrimary">
 
@@ -54,8 +54,9 @@
         android:id="@+id/newDevice_LAY_descriptionLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/device_description"
         android:textColorHint="@color/colorSecondary"
         app:boxCornerRadiusBottomEnd="15dp"
@@ -68,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newDevice_LAY_nameLayout"
-        app:layout_constraintVertical_bias="0.062"
+        app:layout_constraintVertical_bias="0.07"
         app:startIconDrawable="@drawable/ic_baseline_create_24"
         app:startIconTint="@color/colorPrimary">
 
@@ -80,7 +81,6 @@
             android:textColor="@color/colorSecondary" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <!--    <androidx.recyclerview.widget.RecyclerView-->
     <!--        android:id="@+id/newNetwork_LST_devices"-->
@@ -98,6 +98,29 @@
     <!--        app:layout_constraintTop_toBottomOf="@+id/newNetwork_LAY_linearLayout"-->
     <!--        app:layout_constraintVertical_bias="0" />-->
 
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newDevice_LAY_cropTypeLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:gravity="center_horizontal"
+        android:hint="@string/produce"
+        app:layout_constraintBottom_toTopOf="@+id/newDevice_BTN_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newDevice_LAY_descriptionLayout"
+        app:layout_constraintVertical_bias="0.357">
+
+        <AutoCompleteTextView
+            android:id="@+id/newDevice_LAY_cropTypeText"
+            android:layout_width="match_parent"
+            android:dropDownHeight="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/newDevice_BTN_create"

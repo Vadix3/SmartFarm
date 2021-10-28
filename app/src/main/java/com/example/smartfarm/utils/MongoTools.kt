@@ -87,7 +87,7 @@ object MongoTools {
             mongoCollection.find(query).sort(Document("_id", -1)).limit(1)
 
         cursor.iterator().getAsync { result ->
-            if (result != null) {
+            if (result != null && result.get().hasNext()) {
                 val temp = result.get().next()
                 resultListener.result(true, temp.toJson())
             } else {
@@ -120,7 +120,7 @@ object MongoTools {
         database: String,
         collection: String,
         document: Document,
-        query:Document,
+        query: Document,
         resultListener: ResultListener
     ) {
         Log.d(TAG, "putDocument: MongoTools $document query: $query")
@@ -130,11 +130,11 @@ object MongoTools {
             mongoClient.getDatabase(database)!!
         val mongoCollection: MongoCollection<Document> =
             mongoDatabase.getCollection(collection)!!
-        mongoCollection.updateOne(query,document).getAsync{result->
-            if(result.isSuccess){
-                resultListener.result(true,result.get().toString())
-            }else{
-                resultListener.result(false,result.error.toString())
+        mongoCollection.updateOne(query, document).getAsync { result ->
+            if (result.isSuccess) {
+                resultListener.result(true, result.get().toString())
+            } else {
+                resultListener.result(false, result.error.toString())
             }
         }
     }
