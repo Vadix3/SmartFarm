@@ -10,6 +10,14 @@ package com.example.smartfarm.models
  * soil - Int, the measured soil moisture
  * light - Int, the measured light exposure
  * uv - Int, the measured uv exposure
+ *
+ *
+ * measured values scale:
+ * light 0-1000+-
+ * uv 0-100 (100 direct sunlight)
+ * soil moisture 0-700 +- (700 in water)
+ * humidity - 0-100%
+ * temperature - Celsius values
  * */
 
 class SmartFarmData() {
@@ -26,7 +34,7 @@ class SmartFarmData() {
     }
 
     override fun toString(): String {
-        return "\ndevice: $device\ndate: $date\ntime: $time\nhumidity: $humidity\ntemperature: $temperature\n"+
+        return "\ndevice: $device\ndate: $date\ntime: $time\nhumidity: $humidity\ntemperature: $temperature\n" +
                 "soil: $soil\nlight: $light\nuv: $uv"
     }
 }

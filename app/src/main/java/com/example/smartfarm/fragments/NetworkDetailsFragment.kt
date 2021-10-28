@@ -3,7 +3,6 @@ package com.example.smartfarm.fragments
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfarm.MyAppClass
+import com.example.smartfarm.MyAppClass.Constants.CAMERA_PERMISSION
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
 import com.example.smartfarm.adapters.DeviceListAdapter
@@ -187,6 +187,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
             deviceList,
             object : DeviceCallback {
                 override fun getDevice(item: SmartFarmDevice) {
+                    Log.d(TAG, "getDevice: clicked on: $item")
                     fetchDeviceDetails(item)
                 }
 
@@ -201,11 +202,11 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
         Log.d(TAG, "openDeviceWindow: ")
         /** This method will fetch the most recent data from the devices measurement*/
         Log.d(TAG, "fetchLatestData: ")
-        dataController.getLastEntry(item.name, object : MeasurementCallback {
+        dataController.getLastEntry(item.did, object : MeasurementCallback {
             override fun getMeasurement(data: SmartFarmData?) {
                 if (data != null) {
                     Log.d(TAG, "getMeasurement: $data")
-                    openDetailsFragment(data)
+                    openDetailsFragment(data, item)
                 } else {
                     CodingTools.displayToast(
                         mContext,
@@ -218,12 +219,12 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
     }
 
     /** This method will open the device details fragment*/
-    private fun openDetailsFragment(data: SmartFarmData) {
+    private fun openDetailsFragment(data: SmartFarmData, item: SmartFarmDevice) {
         Log.d(TAG, "openDetailsFragment: ")
         CodingTools.switchFragment(
             parentFragmentManager,
             R.id.main_LAY_mainFrame,
-            DataFragment(mContext, data),
+            DataFragment(mContext, data, item),
             true,
             "data"
         )
@@ -266,31 +267,13 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
     /** This method will check for camera permissions*/
     private fun checkCameraPermissions() {
         Log.d(TAG, "checkCameraPermissions: ")
-        when {
-            ContextCompat.checkSelfPermission(
-                mContext,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // Permission is granted
-                Log.d(TAG, "openQrMode: Permission granted")
-                openScanner()
-            }
-            ActivityCompat.shouldShowRequestPermissionRationale(
+        if (CodingTools.checkPermission(
                 requireActivity(),
-                Manifest.permission.CAMERA
-            ) -> {
-                CodingTools.displayToast(mContext, "Permission required", Toast.LENGTH_LONG)
-                Log.d(TAG, "openQrMode: permission required")
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
-            else -> {
-                Log.d(TAG, "openQrMode: asking permission")
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
+                CAMERA_PERMISSION,
+                requestPermissionLauncher
+            )
+        ) {
+            openScanner()
         }
     }
 

@@ -25,7 +25,6 @@ class DataController(context: Context) {
      */
     fun getLastEntry(device: String, listener: MeasurementCallback) {
         val query = Document("device", device)
-
         tools.fetchLastDocument(
             MyAppClass.Constants.DB_NAME,
             MyAppClass.Constants.DATA_COLLECTION,
@@ -34,7 +33,6 @@ class DataController(context: Context) {
                 override fun result(result: Boolean, message: String) {
                     if (result) {
                         Log.d(TAG, "result: SUCCESS: $message")
-
                         // This line will return the fetched measurement as an object
                         listener.getMeasurement(ParsingTools.parseMeasurement(JSONObject(message)))
                     } else {

@@ -19,8 +19,12 @@ class MyAppClass : Application() {
         const val NETWORKS_COLLECTION = "networks"
         const val BT_MODE = "qr"
         const val QR_MODE = "bt"
-        const val STORAGE_PERMISSION = ""
-        const val CAMERA_PERMISSION = ""
+        const val LOCATION_PERMISSION = 0
+        const val CAMERA_PERMISSION = 1
+
+
+        const val CURRENT_WEATHER = 0
+        const val DAILY_WEATHER = 1
 
         const val WRAP_CONTENT = WindowManager.LayoutParams.WRAP_CONTENT
 

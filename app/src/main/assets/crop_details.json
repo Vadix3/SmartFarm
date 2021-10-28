@@ -1,0 +1,494 @@
+{
+  "crops": [
+    {
+      "id": "1",
+      "name": "Turnip",
+      "tips": {
+        "sun": "Full or partial",
+        "water": "Moderate",
+        "min_temp": 4,
+        "max_temp": 23
+      }
+    },
+    {
+      "id": "2",
+      "name": "Radish",
+      "tips": {
+        "sun": "Full or partial",
+        "water": "Moderate+",
+        "min_temp": 4,
+        "max_temp": 21
+      }
+    },
+    {
+      "id": "3",
+      "name": "Ginger",
+      "tips": {
+        "sun": "Partial or shade",
+        "water": "Moderate-",
+        "min_temp": 21,
+        "max_temp": 27
+      }
+    },
+    {
+      "id": "4",
+      "name": "Peas",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": -2,
+        "max_temp": 20
+      }
+    },
+    {
+      "id": "5",
+      "name": "Cucumber",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 18,
+        "max_temp": 23
+      }
+    },
+    {
+      "id": "6",
+      "name": "Chili",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 21,
+        "max_temp": 32
+      }
+    },
+    {
+      "id": "7",
+      "name": "Potato",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 7,
+        "max_temp": 13
+      }
+    },
+    {
+      "id": "8",
+      "name": "Tomato",
+      "tips": {
+        "sun": "Partial",
+        "water": "Moderate+",
+        "min_temp": 14,
+        "max_temp": 16
+      }
+    },
+    {
+      "id": "9",
+      "name": "Carrot",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 16,
+        "max_temp": 20
+      }
+    },
+    {
+      "id": "10",
+      "name": "Eggplant",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 21,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "11",
+      "name": "Corn",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 25,
+        "max_temp": 32
+      }
+    },
+    {
+      "id": "12",
+      "name": "Chard",
+      "tips": {
+        "sun": "Full or partial",
+        "water": "Moderate+",
+        "min_temp": 10,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "13",
+      "name": "Cabbage",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 16,
+        "max_temp": 21
+      }
+    },
+    {
+      "id": "14",
+      "name": "Celery",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 15,
+        "max_temp": 21
+      }
+    },
+    {
+      "id": "15",
+      "name": "Sweet potato",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 18,
+        "max_temp": 35
+      }
+    },
+    {
+      "id": "16",
+      "name": "Kale",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 16,
+        "max_temp": 21
+      }
+    },
+    {
+      "id": "17",
+      "name": "Lemon",
+      "tips": {
+        "sun": "Full or partial",
+        "water": "Moderate-",
+        "min_temp": 15,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "18",
+      "name": "Apple",
+      "tips": {
+        "sun": "Full or partial",
+        "water": "Moderate-",
+        "min_temp": 25,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "19",
+      "name": "Orange",
+      "tips": {
+        "sun": "Full or partial",
+        "water": "Moderate",
+        "min_temp": 12,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "20",
+      "name": "Pear",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 0,
+        "max_temp": 25
+      }
+    },
+    {
+      "id": "21",
+      "name": "Broccoli",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 4,
+        "max_temp": 21
+      }
+    },
+    {
+      "id": "22",
+      "name": "Kiwi",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 0,
+        "max_temp": 40
+      }
+    },
+    {
+      "id": "23",
+      "name": "Melon",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 29,
+        "max_temp": 35
+      }
+    },
+    {
+      "id": "24",
+      "name": "Cashew",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 20,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "25",
+      "name": "Peach",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": -3,
+        "max_temp": 40
+      }
+    },
+    {
+      "id": "26",
+      "name": "Avocado",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 15,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "27",
+      "name": "Cherry",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": -20,
+        "max_temp": 15
+      }
+    },
+    {
+      "id": "28",
+      "name": "Mangosteen",
+      "tips": {
+        "sun": "Shade",
+        "water": "Moderate",
+        "min_temp": 20,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "29",
+      "name": "Papaya",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 20,
+        "max_temp": 32
+      }
+    },
+    {
+      "id": "30",
+      "name": "Watermelon",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 21,
+        "max_temp": 32
+      }
+    },
+    {
+      "id": "31",
+      "name": "Raspberry",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": -15,
+        "max_temp": 15
+      }
+    },
+    {
+      "id": "32",
+      "name": "Bell pepper",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 21,
+        "max_temp": 29
+      }
+    },
+    {
+      "id": "33",
+      "name": "Coconut",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 10,
+        "max_temp": 40
+      }
+    },
+    {
+      "id": "34",
+      "name": "Banana",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 20,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "35",
+      "name": "Strawberry",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 10,
+        "max_temp": 26
+      }
+    },
+    {
+      "id": "36",
+      "name": "Mango",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 15,
+        "max_temp": 25
+      }
+    },
+    {
+      "id": "37",
+      "name": "Pineapple",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 20,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "38",
+      "name": "Pomegranate",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 4,
+        "max_temp": 32
+      }
+    },
+    {
+      "id": "39",
+      "name": "Plum",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 24,
+        "max_temp": 29
+      }
+    },
+    {
+      "id": "40",
+      "name": "Durian",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 24,
+        "max_temp": 29
+      }
+    },
+    {
+      "id": "41",
+      "name": "Starfruit",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 20,
+        "max_temp": 35
+      }
+    },
+    {
+      "id": "42",
+      "name": "Grape",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate+",
+        "min_temp": 25,
+        "max_temp": 32
+      }
+    },
+    {
+      "id": "43",
+      "name": "Mushrooms",
+      "tips": {
+        "sun": "Shade or no sun",
+        "water": "Moderate",
+        "min_temp": 15,
+        "max_temp": 20
+      }
+    },
+    {
+      "id": "44",
+      "name": "Blueberry",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 1,
+        "max_temp": 12
+      }
+    },
+    {
+      "id": "45",
+      "name": "Onion",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 12,
+        "max_temp": 23
+      }
+    },
+    {
+      "id": "46",
+      "name": "Beetroot",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 10,
+        "max_temp": 20
+      }
+    },
+    {
+      "id": "47",
+      "name": "Garlic",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 0,
+        "max_temp": 15
+      }
+    },
+    {
+      "id": "48",
+      "name": "Asparagus",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate",
+        "min_temp": 15,
+        "max_temp": 30
+      }
+    },
+    {
+      "id": "49",
+      "name": "Spring onion",
+      "tips": {
+        "sun": "Full",
+        "water": "Moderate-",
+        "min_temp": 10,
+        "max_temp": 23
+      }
+    }
+  ]
+}

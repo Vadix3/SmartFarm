@@ -9,8 +9,14 @@
 
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="loading_weather">Loading weather…</string>
+    <string name="error_loading_weather">Error loading weather</string>
 
-
+    <string name="permission_required_message">In order to use the weather feature, a location permission is required.
+    In order to grant permission go to Settings -> Apps -> SmartFarm -> Permissions and enable the "Location" permission.</string>
+    <string name="location_services_required">In order to user the weather feature, the location services are needed. Please
+    activate the location services and press the refresh weather button</string>
+    <string name="location_required">Location Required!</string>
     <string name="new_network">New Network</string>
     <string name="new_device">New Device</string>
     <string name="device_description">Description</string>
@@ -18,7 +24,7 @@
     <string name="my_networks">My Networks</string>
     <string name="device_already_active">Device already active</string>
     <string name="there_are_no_devices">There are no devices in this network</string>
-
+    <string name="permission_missing">Permission Missing!</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -40,7 +46,7 @@
     <string name="network_name">Network Name</string>
 
     <string name="no_networks">Hmm, no networks. Would you like to add a new network?</string>
-
+    <string name="produce">Produce</string>
     <string name="credits">Goodware, Freepik, Becris, pixelmeetup</string>
 
     <string name="date">Date</string>
@@ -52,4 +58,115 @@
     <string name="uv_exposure">UV Exposure</string>
     <string name="scan_barcode">Scan QR code</string>
 
+    <string name="turnip">Turnip</string>
+    <string name="radish">Radish</string>
+    <string name="ginger">Ginger</string>
+    <string name="peas">Peas</string>
+    <string name="cucumber">Cucumber</string>
+    <string name="chili">Chili</string>
+    <string name="potato">Potato</string>
+    <string name="tomato">Tomato</string>
+    <string name="carrot">Carrot</string>
+    <string name="eggplant">Eggplant</string>
+    <string name="corn">Corn</string>
+    <string name="chard">Chard</string>
+    <string name="cabbage">Cabbage</string>
+    <string name="celery">Celery</string>
+    <string name="sweet_potato">Sweet potato</string>
+    <string name="kale">Kale</string>
+    <string name="lemon">Lemon</string>
+    <string name="apple">Apple</string>
+    <string name="orange">Orange</string>
+    <string name="pear">Pear</string>
+    <string name="broccoli">Broccoli</string>
+    <string name="kiwi">Kiwi</string>
+    <string name="melon">Melon</string>
+    <string name="cashew">Cashew</string>
+    <string name="peach">Peach</string>
+    <string name="avocado">Avocado</string>
+    <string name="cherry">Cherry</string>
+    <string name="mangosteen">Mangosteen</string>
+    <string name="papaya">Papaya</string>
+    <string name="watermelon">Watermelon</string>
+    <string name="raspberry">Raspberry</string>
+    <string name="bell_pepper">Bell pepper</string>
+    <string name="coconut">Coconut</string>
+    <string name="banana">Banana</string>
+    <string name="strawberry">Strawberry</string>
+    <string name="mango">Mango</string>
+    <string name="pineapple">Pineapple</string>
+    <string name="pomegranate">Pomegranate</string>
+    <string name="plum">Plum</string>
+    <string name="durian">Durian</string>
+    <string name="starfruit">Starfruit</string>
+    <string name="grape">Grape</string>
+    <string name="mushrooms">Mushrooms</string>
+    <string name="blueberry">Blueberry</string>
+    <string name="onion">Onion</string>
+    <string name="beetroot">Beetroot</string>
+    <string name="garlic">Garlic</string>
+    <string name="asparagus">Asparagus</string>
+    <string name="spring_onion">Spring onion</string>
+
+    <string-array name="produce">
+        <item>@string/turnip</item>
+        <item>@string/radish</item>
+        <item>@string/ginger</item>
+        <item>@string/peas</item>
+        <item>@string/cucumber</item>
+        <item>@string/chili</item>
+        <item>@string/potato</item>
+        <item>@string/tomato</item>
+        <item>@string/carrot</item>
+        <item>@string/eggplant</item>
+        <item>@string/corn</item>
+        <item>@string/chard</item>
+        <item>@string/cabbage</item>
+        <item>@string/celery</item>
+        <item>@string/sweet_potato</item>
+        <item>@string/kale</item>
+        <item>@string/lemon</item>
+        <item>@string/apple</item>
+        <item>@string/orange</item>
+        <item>@string/pear</item>
+        <item>@string/broccoli</item>
+        <item>@string/kiwi</item>
+        <item>@string/melon</item>
+        <item>@string/cashew</item>
+        <item>@string/peach</item>
+        <item>@string/avocado</item>
+        <item>@string/cherry</item>
+        <item>@string/mangosteen</item>
+        <item>@string/papaya</item>
+        <item>@string/watermelon</item>
+        <item>@string/raspberry</item>
+        <item>@string/bell_pepper</item>
+        <item>@string/coconut</item>
+        <item>@string/banana</item>
+        <item>@string/strawberry</item>
+        <item>@string/mango</item>
+        <item>@string/pineapple</item>
+        <item>@string/pomegranate</item>
+        <item>@string/plum</item>
+        <item>@string/durian</item>
+        <item>@string/starfruit</item>
+        <item>@string/grape</item>
+        <item>@string/mushrooms</item>
+        <item>@string/blueberry</item>
+        <item>@string/onion</item>
+        <item>@string/beetroot</item>
+        <item>@string/garlic</item>
+        <item>@string/asparagus</item>
+        <item>@string/spring_onion</item>
+    </string-array>
+
+
+    <!-- Not to translate !-->
+
+
+    <string name="base_icon_link">https://openweathermap.org/img/wn/</string>
 </resources>
+
+
+
+
