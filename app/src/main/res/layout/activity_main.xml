@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="1"
         app:menu="@menu/bottom_menu" />
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_LAY_mainFrame"
         android:layout_width="match_parent"
         android:layout_height="0dp"

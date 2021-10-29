@@ -28,6 +28,8 @@ import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
@@ -37,6 +39,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
 
     val mContext = mContext;
     private val network: SmartFarmNetwork = network
+    private val bundle = Bundle()
     private lateinit var dataController: DataController
     private var deviceList = arrayListOf<SmartFarmDevice>()// list of device objects
     private lateinit var addDeviceBtn: FloatingActionButton // fab to add devices
@@ -49,9 +52,14 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Log.d("Permission: ", "Granted")
+                Log.d(TAG, "Granted")
+                openScanner()
             } else {
-                Log.d("Permission: ", "Denied")
+                Log.d(TAG, "Denied")
+                CodingTools.displayErrorDialog(
+                    mContext,
+                    mContext.getString(R.string.camera_permission_required_message)
+                )
             }
         }
 
@@ -63,12 +71,16 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
         Log.d(TAG, "handleResult: $myResult")
         var did = ""
         val text = when (myResult) {
-            is QRResult.QRSuccess -> did = myResult.content.rawValue
-            QRResult.QRUserCanceled -> "User canceled"
+            is QRResult.QRSuccess -> {
+                did = myResult.content.rawValue
+                checkQRValue(did)
+            }
+            QRResult.QRUserCanceled -> {
+                Log.d(TAG, "handleResult: User canceled")
+            }
             QRResult.QRMissingPermission -> "Missing permission"
             is QRResult.QRError -> "${myResult.exception.javaClass.simpleName}: ${myResult.exception.localizedMessage}"
         }
-        checkQRValue(did)
     }
 
     /** This method will check if the read id value is correct*/
@@ -151,12 +163,44 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(MyAppClass.Constants.TAG, "onCreateView: Network details fragment")
+        Log.d(TAG, "onCreateView: Network details fragment")
         val mView = inflater.inflate(R.layout.fragment_network_details, container, false)
-        dataController = DataController(mContext)
         initViews(mView)
+        dataController = DataController(mContext)
+        if (bundle.isEmpty) {
+            loadFromCloud()
+        } else {
+            loadFromBundle()
+        }
+        return mView
+    }
+
+    /** This method will load the info from the bundle*/
+    private fun loadFromBundle() {
+        Log.d(TAG, "loadFromBundle: ")
+        val value = bundle.get(MyAppClass.Constants.DEVICE_LIST) as String
+        val turnsType = object : TypeToken<ArrayList<SmartFarmDevice>>() {}.type
+        val devices = Gson().fromJson<ArrayList<SmartFarmDevice>>(value, turnsType)
+        deviceList = devices
+        updateDevicesList() // refresh the document list
+    }
+
+    /** This method will load the fragment details from the cloud*/
+    private fun loadFromCloud() {
+        Log.d(TAG, "loadFromCloud: ")
+        dataController = DataController(mContext)
         fetchNetworksDevices()
-        return mView;
+    }
+
+    /** This callback happens when we move make a transaction to another fragment
+     * here we will save the fetched data to a bundle, to not load it from the server again
+     * upon entering the fragment again
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        val jsonList = Gson().toJson(deviceList)
+        bundle.putSerializable(MyAppClass.Constants.DEVICE_LIST, jsonList)
     }
 
     /** This method will fetch all the devices that belong to this network*/
@@ -244,6 +288,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
 
     private fun openAddDeviceDialog() {
         Log.d(TAG, "openAddDeviceDialog: ")
+        //TODO: Bug here
 //        val dialog = AddDeviceModeDialog(mContext, object : ResultListener {
 //            override fun result(result: Boolean, message: String) {
 //                //Depends on the user's decision, the app will open the appropriate dialog

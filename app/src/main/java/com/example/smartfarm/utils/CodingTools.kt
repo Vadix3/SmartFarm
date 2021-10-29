@@ -49,6 +49,7 @@ object CodingTools {
             R.anim.enter_from_left,
             R.anim.exit_to_right
         )
+        transaction.setReorderingAllowed(true)
         transaction.replace(srcFrame, targetFragment)
         if (addToBackStack) {
             transaction.addToBackStack(transactionName)
@@ -169,7 +170,7 @@ object CodingTools {
             else -> {
                 Log.d(TAG, "checkPermission: asking permission")
                 requestPermissionLauncher.launch(
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    permissionCode
                 )
             }
         }

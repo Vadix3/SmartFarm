@@ -11,8 +11,9 @@
     <string name="no">No</string>
     <string name="loading_weather">Loading weather…</string>
     <string name="error_loading_weather">Error loading weather</string>
-
-    <string name="permission_required_message">In order to use the weather feature, a location permission is required.
+    <string name="camera_permission_required_message">In order to add a new device, a camera permission is required.
+    In order to grant permission go to Settings -> Apps -> SmartFarm -> Permissions and enable the "Camera" permission.</string>
+    <string name="location_permission_required_message">In order to use the weather feature, a location permission is required.
     In order to grant permission go to Settings -> Apps -> SmartFarm -> Permissions and enable the "Location" permission.</string>
     <string name="location_services_required">In order to user the weather feature, the location services are needed. Please
     activate the location services and press the refresh weather button</string>

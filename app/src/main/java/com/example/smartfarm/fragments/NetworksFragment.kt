@@ -11,40 +11,85 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfarm.MyAppClass
+import com.example.smartfarm.MyAppClass.Constants.NETWORK_LIST
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
 import com.example.smartfarm.adapters.NetworkListAdapter
 import com.example.smartfarm.controllers.DataController
 import com.example.smartfarm.dialogs.FirstNetworkDialog
 import com.example.smartfarm.dialogs.NewNetworkDialog
+import com.example.smartfarm.interfaces.DeviceListCallback
 import com.example.smartfarm.interfaces.NetworkListCallback
 import com.example.smartfarm.interfaces.NetworkCallback
 import com.example.smartfarm.interfaces.ResultListener
+import com.example.smartfarm.models.SmartFarmDevice
 import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 
 class NetworksFragment(mContext: Context) : Fragment() {
 
-    val mContext = mContext;
-
+    private val mContext = mContext;
+    private val savedState = Bundle()
     private lateinit var dataController: DataController
     private var networkList = arrayListOf<SmartFarmNetwork>()// list of network object
     private lateinit var createNetworkBtn: FloatingActionButton // fab to add networks
     private lateinit var networkRecycler: RecyclerView  // recyclerView of the networks
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: NetworksFragment")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(MyAppClass.Constants.TAG, "onCreateView: HomeFragment")
+        Log.d(TAG, "onCreateView: NetworksFragment")
+
+        /** here we check if we already loaded this fragment, and therefore the bundle should
+        not be empty.
+        instead we will load the information from the bundle instead of the cloud*/
         val mView = inflater.inflate(R.layout.fragment_networks, container, false)
-        dataController = DataController(mContext)
         initViews(mView)
-        fetchUsersNetworks()
+        if (savedState.isEmpty) {
+            loadFromCloud()
+        } else {
+            loadFromBundle()
+        }
         return mView;
+    }
+
+    /** This method will load the info from the bundle*/
+    private fun loadFromBundle() {
+        Log.d(TAG, "loadFromBundle: ")
+        val value = savedState.get(NETWORK_LIST) as String
+        val turnsType = object : TypeToken<ArrayList<SmartFarmNetwork>>() {}.type
+        val turns = Gson().fromJson<ArrayList<SmartFarmNetwork>>(value, turnsType)
+        networkList = turns
+        updateNetworkList()
+    }
+
+    /** This method will load the fragment details from the cloud*/
+    private fun loadFromCloud() {
+        Log.d(TAG, "loadFromCloud: ")
+        dataController = DataController(mContext)
+        fetchUsersNetworks()
+    }
+
+    /** This callback happens when we move make a transaction to another fragment
+     * here we will save the fetched data to a bundle, to not load it from the server again
+     * upon entering the fragment again
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        val jsonList = Gson().toJson(networkList)
+        savedState.putSerializable(NETWORK_LIST, jsonList)
     }
 
     /** This method will fetch all the users networks from the server
@@ -147,6 +192,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
         networkRecycler.adapter = adapter
     }
 
+
     /** This method will open the selected network details dialog, that will display the devices*/
     private fun openNetworkDetails(network: SmartFarmNetwork) {
         Log.d(TAG, "openNetworkDetails: ")
@@ -161,7 +207,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
 
     /** A method that initializes the views in the fragment*/
     private fun initViews(mView: View) {
-        Log.d(MyAppClass.Constants.TAG, "initViews: Networks fragment")
+        Log.d(TAG, "initViews: Networks fragment")
         networkRecycler = mView.findViewById(R.id.networks_LST_networkList)
         createNetworkBtn = mView.findViewById(R.id.networks_BTN_addNetwork)
         createNetworkBtn.setOnClickListener {
