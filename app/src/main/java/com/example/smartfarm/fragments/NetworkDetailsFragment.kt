@@ -49,9 +49,14 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Log.d("Permission: ", "Granted")
+                Log.d(TAG, "Granted")
+                openScanner()
             } else {
-                Log.d("Permission: ", "Denied")
+                Log.d(TAG, "Denied")
+                CodingTools.displayErrorDialog(
+                    mContext,
+                    mContext.getString(R.string.camera_permission_required_message)
+                )
             }
         }
 
@@ -63,12 +68,16 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
         Log.d(TAG, "handleResult: $myResult")
         var did = ""
         val text = when (myResult) {
-            is QRResult.QRSuccess -> did = myResult.content.rawValue
-            QRResult.QRUserCanceled -> "User canceled"
+            is QRResult.QRSuccess -> {
+                did = myResult.content.rawValue
+                checkQRValue(did)
+            }
+            QRResult.QRUserCanceled -> {
+                Log.d(TAG, "handleResult: User canceled")
+            }
             QRResult.QRMissingPermission -> "Missing permission"
             is QRResult.QRError -> "${myResult.exception.javaClass.simpleName}: ${myResult.exception.localizedMessage}"
         }
-        checkQRValue(did)
     }
 
     /** This method will check if the read id value is correct*/

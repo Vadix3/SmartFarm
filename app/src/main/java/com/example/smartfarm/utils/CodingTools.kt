@@ -169,7 +169,7 @@ object CodingTools {
             else -> {
                 Log.d(TAG, "checkPermission: asking permission")
                 requestPermissionLauncher.launch(
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    permissionCode
                 )
             }
         }

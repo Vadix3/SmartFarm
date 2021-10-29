@@ -187,7 +187,7 @@ class HomeFragment(mContext: Context) : Fragment() {
         Log.d(TAG, "showLocationPermissionMessage: ")
         CodingTools.displayErrorDialog(
             mContext,
-            mContext.getString(R.string.permission_required_message)
+            mContext.getString(R.string.location_permission_required_message)
         )
         showLocationPermissionErrorFragment()
     }
@@ -203,7 +203,7 @@ class HomeFragment(mContext: Context) : Fragment() {
             override fun result(result: Boolean, message: String) {
                 CodingTools.displayErrorDialog(
                     mContext,
-                    getString(R.string.permission_required_message)
+                    getString(R.string.location_permission_required_message)
                 )
             }
         }
