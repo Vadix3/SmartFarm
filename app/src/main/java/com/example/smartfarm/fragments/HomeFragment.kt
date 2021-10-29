@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.TAG
+import com.example.smartfarm.MyAppClass.Constants.WEATHER_DATA
 import com.example.smartfarm.R
 import com.example.smartfarm.interfaces.ResultListener
 import com.example.smartfarm.utils.CodingTools
@@ -44,8 +45,15 @@ class HomeFragment(mContext: Context) : Fragment() {
     private lateinit var locationCallback: LocationCallback
     private lateinit var weatherPreviewFragment: WeatherPreviewFragment
     private var shownLocationDialog = false // This variable will indicate if the user already saw
-    private var isLoadingWeather = false
     // the location services message in order to not spam him
+
+    private var isLoadingWeather = false
+
+    private val isWeatherLoaded = false // A variable to indicate if I already loaded weather data
+    // in this fragment
+
+    // Bundle to save stuff
+    private val bundle = Bundle()
 
     /** Resolution result listener for location services*/
     private val resolutionForResult =
@@ -291,6 +299,8 @@ class HomeFragment(mContext: Context) : Fragment() {
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val weather = response.body!!.string()
+                    // put the weather in the bundle
+                    bundle.putString(WEATHER_DATA, weather)
                     Log.d(TAG, "testMethod: SUCCESS: $weather")
                     updateWeatherUI(weather)
                 } else {
@@ -356,10 +366,26 @@ class HomeFragment(mContext: Context) : Fragment() {
         val mView = inflater.inflate(R.layout.fragment_home, container, false)
         initViews(mView)
         initLocationServices()
-        tryToDisplayWeather()
-//        updateWeatherUI(weatherExample)
+
+        // if the weather has not been loaded already
+        if (bundle.isEmpty || bundle.get(WEATHER_DATA) == null) {
+            tryToDisplayWeather()
+        } else {
+            loadWeatherFromBundle()
+        }
+
+
         return mView;
     }
+
+    /** This method will load the info from the bundle*/
+    private fun loadWeatherFromBundle() {
+        Log.d(TAG, "loadFromBundle: ")
+        val value = bundle.get(MyAppClass.Constants.WEATHER_DATA) as String
+        updateWeatherUI(value)
+    }
+
+
 
     /** This method will try to display the weather, depends on the location permissions
      * and location services on the phone. It will trigger the series of events to display the

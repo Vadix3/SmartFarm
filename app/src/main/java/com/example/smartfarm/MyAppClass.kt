@@ -22,6 +22,10 @@ class MyAppClass : Application() {
         const val LOCATION_PERMISSION = 0
         const val CAMERA_PERMISSION = 1
 
+        const val NETWORK_LIST = "networkList"
+        const val DEVICE_LIST = "deviceList"
+        const val WEATHER_DATA = "weatherData"
+        const val LIST_OF_DEVICES = "devices"
 
         const val CURRENT_WEATHER = 0
         const val DAILY_WEATHER = 1
