@@ -1,6 +1,7 @@
 package com.example.smartfarm.fragments
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.NETWORK_LIST
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
+import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.adapters.NetworkListAdapter
 import com.example.smartfarm.controllers.DataController
 import com.example.smartfarm.dialogs.FirstNetworkDialog
@@ -44,24 +47,37 @@ class NetworksFragment(mContext: Context) : Fragment() {
         Log.d(TAG, "onCreate: NetworksFragment")
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreateView: NetworksFragment")
+        (requireActivity() as MainActivity).changeToolbarTitle(getString(R.string.networks))
 
         /** here we check if we already loaded this fragment, and therefore the bundle should
         not be empty.
         instead we will load the information from the bundle instead of the cloud*/
         val mView = inflater.inflate(R.layout.fragment_networks, container, false)
         initViews(mView)
-        if (savedState.isEmpty) {
-            loadFromCloud()
+        if (CodingTools.isOnline(mContext)) {
+            if (savedState.isEmpty) {
+                loadFromCloud()
+            } else {
+                loadFromBundle()
+            }
         } else {
-            loadFromBundle()
+            loadDataFromSP()
         }
         return mView;
+    }
+
+    /** This method will load the most latest data from SP */
+    private fun loadDataFromSP() {
+        Log.d(TAG, "loadDataFromSP: ")
+        CodingTools.displayErrorDialog(mContext, mContext.getString(R.string.loading_data_from_sp))
+        //TODO: ROOM
     }
 
     /** This method will load the info from the bundle*/

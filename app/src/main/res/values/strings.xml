@@ -1,13 +1,21 @@
 <resources>
     <string name="app_name">SmartFarm</string>
     <string name="app_id">smartfarm-thpgu</string>
-
+    <string name="please_enter_device_name">Please enter a device name</string>
     <string name="home">Home</string>
     <string name="networks">Networks</string>
     <string name="settings">Settings</string>
-
-
+    <string name="loading_data_from_sp">No internet connection. Loading latest saved data, which might be outdated.</string>
+    <string name="device_settings">Device settings</string>
+    <string name="measure_interval">Measurement interval</string>
+    <string name="measurement_info">This time indicates how long should the device wait between measurements, in hours</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="produce_info">Choose which crop type the device is measuring</string>
     <string name="yes">Yes</string>
+    <string name="Status">Status</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="status_info">This button indicates whether the device is on or off. Green button indicates \'On\'.</string>
     <string name="no">No</string>
     <string name="loading_weather">Loading weather…</string>
     <string name="error_loading_weather">Error loading weather</string>
@@ -45,9 +53,12 @@
     <string name="devices">Devices</string>
 
     <string name="network_name">Network Name</string>
-
+    <string name="error_changing_interval">Error changing interval: </string>
+    <string name="error_changing_switch">Error switching device on/off: </string>
+    <string name="error_updating_device">Error updating device: </string>
     <string name="no_networks">Hmm, no networks. Would you like to add a new network?</string>
     <string name="produce">Produce</string>
+    <string name="produce_error">Please select device produce</string>
     <string name="credits">Goodware, Freepik, Becris, pixelmeetup</string>
 
     <string name="date">Date</string>

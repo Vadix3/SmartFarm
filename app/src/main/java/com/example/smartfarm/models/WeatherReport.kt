@@ -13,6 +13,7 @@ class WeatherReport() {
     var wind_speed: Double = 0.0
     var weather_description: String = ""
     var icon: String = ""
+    //TODO: Add precipitation chance
 
     init {
     }

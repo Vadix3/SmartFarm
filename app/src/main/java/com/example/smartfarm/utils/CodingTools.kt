@@ -26,6 +26,17 @@ import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import android.net.NetworkInfo
+
+import androidx.core.content.ContextCompat.getSystemService
+
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.smartfarm.models.ProduceRow
+import com.example.smartfarm.models.SmartFarmDevice
+
 
 /** A class of usefull coding tools*/
 
@@ -52,6 +63,7 @@ object CodingTools {
         transaction.setReorderingAllowed(true)
         transaction.replace(srcFrame, targetFragment)
         if (addToBackStack) {
+            Log.d(TAG, "switchFragment: adding to back stack")
             transaction.addToBackStack(transactionName)
         }
         transaction.commit()
@@ -66,6 +78,15 @@ object CodingTools {
     fun displayErrorDialog(myContext: Context, message: String) {
         val builder = AlertDialog.Builder(myContext)
         builder.setTitle("Error")
+        builder.setMessage(message)
+        builder.setPositiveButton("OK") { dialog, which ->
+            dialog.dismiss()
+        }.create().show()
+    }
+
+    fun displayInfoDialog(myContext: Context, message: String) {
+        val builder = AlertDialog.Builder(myContext)
+        builder.setTitle("Info")
         builder.setMessage(message)
         builder.setPositiveButton("OK") { dialog, which ->
             dialog.dismiss()
@@ -101,6 +122,47 @@ object CodingTools {
         return json
     }
 
+    /** This method will return an array of produceRow from the app resources
+     * the method will get the names and extract the drawables png files*/
+    fun getCropsFromResources(mContext: Context): ArrayList<ProduceRow> {
+        Log.d(TAG, "populateCropList: ")
+        // A list of names that matches the produce names in the drawable
+        val plainNames = mContext.resources.getStringArray(R.array.produce)
+        val produceList = arrayListOf<ProduceRow>()
+        for (item in plainNames) {
+            val temp = ProduceRow()
+            var drawableName = item
+            temp.name = item
+
+            drawableName = drawableName.toLowerCase()
+            if (drawableName.contains(' ')) {
+                drawableName = drawableName.replace(
+                    ' ',
+                    '_'
+                ) // replace the spaces with _ to match the drawable names
+            }
+            val id = mContext.resources
+                .getIdentifier(drawableName, "drawable", mContext.packageName) // get the id by name
+            temp.icon = id
+            produceList.add(temp)
+        }
+        return produceList
+    }
+
+    /** Since the given object in the fragment is given by reference, we will clone
+     * the device to compare it to the original one and determine if any changes were made
+     */
+    fun cloneDevice(device:SmartFarmDevice): SmartFarmDevice {
+        val temp = SmartFarmDevice()
+        temp.did = device.did
+        temp.active = device.active
+        temp.description = device.description
+        temp.produce = device.produce
+        temp.measure_interval = device.measure_interval
+        temp.name = device.name
+        return temp
+    }
+
     /** This method will fetch a single crop details object from the array using the name*/
     fun getSingleCropDetails(activity: Activity, name: String): CropDetails {
         val tempObject = CropDetails()
@@ -129,6 +191,30 @@ object CodingTools {
         val value = ai.metaData["weatherKey"]
 
         return value.toString()
+    }
+
+    /** A method to check if the phone has an internet connection*/
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i(TAG, "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i(TAG, "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i(TAG, "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     /** This method will check if the requested permission is given.

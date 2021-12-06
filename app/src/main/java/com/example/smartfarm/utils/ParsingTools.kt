@@ -2,10 +2,7 @@ package com.example.smartfarm.utils
 
 import android.util.Log
 import com.example.smartfarm.MyAppClass.Constants.TAG
-import com.example.smartfarm.models.SmartFarmData
-import com.example.smartfarm.models.SmartFarmDevice
-import com.example.smartfarm.models.SmartFarmNetwork
-import com.example.smartfarm.models.WeatherReport
+import com.example.smartfarm.models.*
 import org.bson.Document
 import org.json.JSONArray
 import org.json.JSONObject
@@ -52,6 +49,7 @@ object ParsingTools {
         data.name = item["name"] as String
         data.active = item["active"] as Boolean
         data.description = item["description"] as String
+        data.measure_interval=item["measure_interval"]as Double
         return data
     }
 
@@ -60,7 +58,9 @@ object ParsingTools {
         document.append("name", device.name)
         document.append("description", device.description)
         document.append("did", device.did)
-        document.append("active", true)
+        document.append("active", device.active)
+        document.append("produce",device.produce)
+        document.append("measure_interval",device.measure_interval)
         return document
     }
 
@@ -99,5 +99,15 @@ object ParsingTools {
             list.add(data)
         }
         return list
+    }
+
+    fun commandToDocument(command: CommandModel): Document {
+        val document = org.bson.Document()
+        document.append("id", command.id)
+        document.append("device_id", command.deviceId)
+        document.append("time", command.time)
+        document.append("type", command.type)
+        document.append("data", command.data)
+        return document
     }
 }

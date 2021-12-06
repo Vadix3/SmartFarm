@@ -118,6 +118,13 @@ class LoginFragment(mContext: Context, loginListener: LoginListener) : Fragment(
                 if (result) {
                     loginListener.moveToMain(email)
                 } else {
+                    Log.d(TAG, "result: message = $message")
+                    if (message == "1") {
+                        CodingTools.displayErrorDialog(
+                            mContext,
+                            mContext.getString(R.string.no_internet_connection)
+                        )
+                    }
                     CodingTools.displayToast(mContext, "Error: $message", Toast.LENGTH_SHORT)
                 }
             }

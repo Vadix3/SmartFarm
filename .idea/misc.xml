@@ -15,7 +15,8 @@
         <entry key="app/src/main/res/layout/dialog_forecast.xml" value="0.12545289855072464" />
         <entry key="app/src/main/res/layout/dialog_new_device.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_new_network.xml" value="0.175" />
-        <entry key="app/src/main/res/layout/fragment_data.xml" value="0.24974643543426583" />
+        <entry key="app/src/main/res/layout/fragment_data.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_device_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_error.xml" value="0.45" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.14324796918724347" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.25" />
@@ -24,8 +25,9 @@
         <entry key="app/src/main/res/layout/fragment_new_network.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.2563405797101449" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_stats.xml" value="0.19583333333333333" />
         <entry key="app/src/main/res/layout/fragment_weather_preview.xml" value="0.4667285849383086" />
-        <entry key="app/src/main/res/layout/network_row.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/network_row.xml" value="0.20598544981901493" />
         <entry key="app/src/main/res/layout/row_forecast_recycler.xml" value="0.25" />
         <entry key="app/src/main/res/layout/row_produce_item.xml" value="0.2296875" />
         <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.20364583333333333" />

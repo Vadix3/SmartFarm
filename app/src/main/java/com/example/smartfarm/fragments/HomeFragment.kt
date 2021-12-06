@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.IntentSender
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.smartfarm.MyAppClass
@@ -21,6 +23,7 @@ import com.example.smartfarm.MyAppClass.Constants.WEATHER_DATA
 import com.example.smartfarm.R
 import com.example.smartfarm.interfaces.ResultListener
 import com.example.smartfarm.utils.CodingTools
+import com.example.smartfarm.utils.MongoTools
 import com.example.smartfarm.utils.ParsingTools
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -33,6 +36,8 @@ import com.google.android.gms.location.LocationResult
 
 import com.google.android.gms.location.LocationCallback
 import org.json.JSONObject
+import org.w3c.dom.Document
+import java.util.*
 
 
 class HomeFragment(mContext: Context) : Fragment() {
@@ -57,35 +62,35 @@ class HomeFragment(mContext: Context) : Fragment() {
 
     /** Resolution result listener for location services*/
     private val resolutionForResult =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { activityResult ->
-            if (activityResult.resultCode == AppCompatActivity.RESULT_OK) {
-                Log.d(TAG, "User did activate: ")
-                fetchLastLocation()
-            } else {
-                Log.d(TAG, "User did not activate: ")
-                showEnableLocationBtn()
+            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { activityResult ->
+                if (activityResult.resultCode == AppCompatActivity.RESULT_OK) {
+                    Log.d(TAG, "User did activate: ")
+                    fetchLastLocation()
+                } else {
+                    Log.d(TAG, "User did not activate: ")
+                    showEnableLocationBtn()
+                }
             }
-        }
 
     /** Permission listener result handler*/
     private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                Log.d(TAG, "Granted")
-                if (locationEnabled()) {
-                    fetchLastLocation()
-                } else {
-                    Log.d(TAG, "locationEnabled: location not enabled")
-                    showLocationPrompt()
-                }
+            registerForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    Log.d(TAG, "Granted")
+                    if (locationEnabled()) {
+                        fetchLastLocation()
+                    } else {
+                        Log.d(TAG, "locationEnabled: location not enabled")
+                        showLocationPrompt()
+                    }
 
-            } else {
-                Log.d(TAG, "Denied")
-                showLocationPermissionMessage()
+                } else {
+                    Log.d(TAG, "Denied")
+                    showLocationPermissionMessage()
+                }
             }
-        }
 
     /** This method will initialize the location services variables, most importantly the location
      * callback where we receive our desired location
@@ -116,21 +121,21 @@ class HomeFragment(mContext: Context) : Fragment() {
     /** This method will fetch the users last location and initiate the weather details method*/
     private fun fetchLastLocation() {
         fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
         )
         fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    fetchWeatherDetails(location)
-                    stopLocationUpdates()
-                } else {
-                    Log.d(TAG, "testMethod: Location is null")
-                    showLoadingWeather()
+                .addOnSuccessListener { location: Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        fetchWeatherDetails(location)
+                        stopLocationUpdates()
+                    } else {
+                        Log.d(TAG, "testMethod: Location is null")
+                        showLoadingWeather()
+                    }
                 }
-            }
     }
 
     /** This method will show that the weather info is loading*/
@@ -147,11 +152,11 @@ class HomeFragment(mContext: Context) : Fragment() {
             }
             val fragment = ErrorFragment(mContext, message, drawableResource, callback)
             CodingTools.switchFragment(
-                childFragmentManager,
-                R.id.home_LAY_weatherLayout,
-                fragment,
-                false,
-                "Weather"
+                    childFragmentManager,
+                    R.id.home_LAY_weatherLayout,
+                    fragment,
+                    false,
+                    "Weather"
             )
         }
         fetchLastLocation()
@@ -164,8 +169,8 @@ class HomeFragment(mContext: Context) : Fragment() {
         Log.d(TAG, "showEnableLocationBtn: ")
         if (!shownLocationDialog) {
             CodingTools.displayErrorDialog(
-                mContext,
-                mContext.getString(R.string.location_services_required)
+                    mContext,
+                    mContext.getString(R.string.location_services_required)
             )
             shownLocationDialog = true
         }
@@ -178,11 +183,11 @@ class HomeFragment(mContext: Context) : Fragment() {
         }
         val fragment = ErrorFragment(mContext, message, drawableResource, callback)
         CodingTools.switchFragment(
-            childFragmentManager,
-            R.id.home_LAY_weatherLayout,
-            fragment,
-            false,
-            "Weather"
+                childFragmentManager,
+                R.id.home_LAY_weatherLayout,
+                fragment,
+                false,
+                "Weather"
         )
 
 
@@ -194,8 +199,8 @@ class HomeFragment(mContext: Context) : Fragment() {
     private fun showLocationPermissionMessage() {
         Log.d(TAG, "showLocationPermissionMessage: ")
         CodingTools.displayErrorDialog(
-            mContext,
-            mContext.getString(R.string.location_permission_required_message)
+                mContext,
+                mContext.getString(R.string.location_permission_required_message)
         )
         showLocationPermissionErrorFragment()
     }
@@ -210,18 +215,18 @@ class HomeFragment(mContext: Context) : Fragment() {
         val callback = object : ResultListener {
             override fun result(result: Boolean, message: String) {
                 CodingTools.displayErrorDialog(
-                    mContext,
-                    getString(R.string.location_permission_required_message)
+                        mContext,
+                        getString(R.string.location_permission_required_message)
                 )
             }
         }
         val fragment = ErrorFragment(mContext, message, drawableResource, callback)
         CodingTools.switchFragment(
-            childFragmentManager,
-            R.id.home_LAY_weatherLayout,
-            fragment,
-            false,
-            "Weather"
+                childFragmentManager,
+                R.id.home_LAY_weatherLayout,
+                fragment,
+                false,
+                "Weather"
         )
     }
 
@@ -233,7 +238,7 @@ class HomeFragment(mContext: Context) : Fragment() {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
 
         val result: Task<LocationSettingsResponse> =
-            LocationServices.getSettingsClient(mContext).checkLocationSettings(builder.build())
+                LocationServices.getSettingsClient(mContext).checkLocationSettings(builder.build())
 
         result.addOnCompleteListener { task ->
             try {
@@ -247,11 +252,11 @@ class HomeFragment(mContext: Context) : Fragment() {
                         try {
                             // Cast to a resolvable exception.
                             val resolvable: ResolvableApiException =
-                                exception as ResolvableApiException
+                                    exception as ResolvableApiException
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
                             val intentSenderRequest =
-                                IntentSenderRequest.Builder(exception.resolution).build()
+                                    IntentSenderRequest.Builder(exception.resolution).build()
                             resolutionForResult.launch(intentSenderRequest)
 
                         } catch (e: IntentSender.SendIntentException) {
@@ -286,12 +291,12 @@ class HomeFragment(mContext: Context) : Fragment() {
         val lon = location.longitude
         val key = CodingTools.getWeatherAPIKey(mContext)
         val link =
-            "https://api.openweathermap.org/data/2.5/onecall" +
-                    "?lat=$lat" +
-                    "&lon=$lon" +
-                    "&exclude=hourly,minutely" +
-                    "&units=metric" +
-                    "&appid=$key"
+                "https://api.openweathermap.org/data/2.5/onecall" +
+                        "?lat=$lat" +
+                        "&lon=$lon" +
+                        "&exclude=hourly,minutely" +
+                        "&units=metric" +
+                        "&appid=$key"
         val client = OkHttpClient()
         Thread {
             val request = Request.Builder().url(link).build()
@@ -301,15 +306,15 @@ class HomeFragment(mContext: Context) : Fragment() {
                     val weather = response.body!!.string()
                     // put the weather in the bundle
                     bundle.putString(WEATHER_DATA, weather)
-                    Log.d(TAG, "testMethod: SUCCESS: $weather")
+                    Log.d(TAG, "fetchWeatherDetails: SUCCESS: $weather")
                     updateWeatherUI(weather)
                 } else {
-                    Log.d(TAG, "testMethod: RESPONSE ERROR: $response")
+                    Log.d(TAG, "fetchWeatherDetails: RESPONSE ERROR: $response")
                     errorLoadingWeather(location)
                 }
 
             } catch (e: Exception) {
-                Log.d(TAG, "testMethod: ERROR: $e")
+                Log.d(TAG, "fetchWeatherDetails: ERROR: $e")
             }
         }.start()
     }
@@ -328,11 +333,11 @@ class HomeFragment(mContext: Context) : Fragment() {
 
 
         CodingTools.switchFragment(
-            childFragmentManager,
-            R.id.home_LAY_weatherLayout,
-            weatherPreviewFragment,
-            false,
-            "Weather"
+                childFragmentManager,
+                R.id.home_LAY_weatherLayout,
+                weatherPreviewFragment,
+                false,
+                "Weather"
         )
     }
 
@@ -348,34 +353,42 @@ class HomeFragment(mContext: Context) : Fragment() {
         }
         val fragment = ErrorFragment(mContext, message, drawableResource, callback)
         CodingTools.switchFragment(
-            childFragmentManager,
-            R.id.home_LAY_weatherLayout,
-            fragment,
-            false,
-            "Weather"
+                childFragmentManager,
+                R.id.home_LAY_weatherLayout,
+                fragment,
+                false,
+                "Weather"
         )
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreateView: HomeFragment")
         val mView = inflater.inflate(R.layout.fragment_home, container, false)
         initViews(mView)
-        initLocationServices()
-
-        // if the weather has not been loaded already
-        if (bundle.isEmpty || bundle.get(WEATHER_DATA) == null) {
-            tryToDisplayWeather()
+        if (CodingTools.isOnline(mContext)) {
+            // if the weather has not been loaded already
+            initLocationServices()
+            if (bundle.isEmpty || bundle.get(WEATHER_DATA) == null) {
+                tryToDisplayWeather()
+            } else {
+                loadWeatherFromBundle()
+            }
         } else {
-            loadWeatherFromBundle()
+            loadDataFromSP()
         }
-
-
         return mView;
+    }
+
+    /** This method will load the most latest data from SP */
+    private fun loadDataFromSP() {
+        Log.d(TAG, "loadDataFromSP: ")
+        CodingTools.displayErrorDialog(mContext, mContext.getString(R.string.loading_data_from_sp))
     }
 
     /** This method will load the info from the bundle*/
@@ -384,7 +397,6 @@ class HomeFragment(mContext: Context) : Fragment() {
         val value = bundle.get(MyAppClass.Constants.WEATHER_DATA) as String
         updateWeatherUI(value)
     }
-
 
 
     /** This method will try to display the weather, depends on the location permissions
@@ -403,9 +415,9 @@ class HomeFragment(mContext: Context) : Fragment() {
     private fun tryToDisplayWeather() {
         Log.d(TAG, "tryToDisplayWeather: ")
         if (CodingTools.checkPermission(
-                requireActivity(),
-                MyAppClass.Constants.LOCATION_PERMISSION, requestPermissionLauncher
-            )
+                        requireActivity(),
+                        MyAppClass.Constants.LOCATION_PERMISSION, requestPermissionLauncher
+                )
         ) {
             Log.d(TAG, "testMethod: Permission already given, continue")
             if (locationEnabled()) {

@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.R
-import com.example.smartfarm.models.SmartFarmDevice
 
-class SettingsFragment(mContext: Context) : Fragment() {
+class StatsFragment (mContext: Context): Fragment() {
 
-    val mContext = mContext
+    val mContext=mContext;
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,7 +20,7 @@ class SettingsFragment(mContext: Context) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.d(MyAppClass.Constants.TAG, "onCreateView: HomeFragment")
-        val mView = inflater.inflate(R.layout.fragment_settings, container, false)
+        val mView = inflater.inflate(R.layout.fragment_stats, container, false)
         initViews(mView)
         return mView;
     }
