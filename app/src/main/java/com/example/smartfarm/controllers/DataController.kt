@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.interfaces.*
+import com.example.smartfarm.models.CommandModel
 import com.example.smartfarm.models.SmartFarmDevice
 import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.MongoTools
@@ -12,6 +13,8 @@ import com.example.smartfarm.utils.ParsingTools
 import org.bson.Document
 import org.bson.types.ObjectId
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 /** The class will perform the needed actions to get the data from the server*/
 class DataController(context: Context) {
@@ -72,7 +75,7 @@ class DataController(context: Context) {
     /** This function will add the given did to the selected network*/
     fun addDeviceToNetwork(
         did: String,
-        network:SmartFarmNetwork,
+        network: SmartFarmNetwork,
         resultListener: ResultListener
     ) {
         Log.d(TAG, "initDevice: Controller")
@@ -108,6 +111,26 @@ class DataController(context: Context) {
                     }
                 }
             })
+    }
+
+    /** This method will send a command object to the cloud.
+     * the command will consist of:
+     * - The type of the command
+     * - Any extra data for the command
+     * Current command types:
+     * TURN_OFF_COMMAND = 2
+     * TURN_ON_COMMAND = 1
+     * CHANGE_DURATION_COMMAND = 0
+     */
+    fun sendCommand(command: CommandModel, listener: ResultListener) {
+        Log.d(TAG, "sendTestCommand: ")
+        val document = ParsingTools.commandToDocument(command)
+        MongoTools.putDocument(
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.COMMANDS_COLLECTION,
+            document,
+            listener
+        )
     }
 
     /** This method will return a list of the fetched networks
@@ -166,5 +189,17 @@ class DataController(context: Context) {
                     }
                 }
             })
+    }
+
+    /** This method will update the device document in the cloud*/
+    fun updateDevice(device: SmartFarmDevice, listener: ResultListener) {
+        Log.d(TAG, "updateDevice: Controller:")
+        MongoTools.updateDocument(
+            MyAppClass.Constants.DB_NAME,
+            MyAppClass.Constants.DEVICES_COLLECTION,
+            ParsingTools.deviceToDocument(device),
+            Document("did", device.did),
+            listener
+        )
     }
 }

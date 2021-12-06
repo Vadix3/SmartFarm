@@ -14,6 +14,7 @@ import com.example.smartfarm.adapters.ProduceListAdapter
 import com.example.smartfarm.interfaces.DeviceCallback
 import com.example.smartfarm.models.ProduceRow
 import com.example.smartfarm.models.SmartFarmDevice
+import com.example.smartfarm.utils.CodingTools
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -24,6 +25,7 @@ import kotlin.collections.ArrayList
 class NewDeviceDialog(mContext: Context, did: String, listener: DeviceCallback) : Dialog(mContext) {
 
     private val device = SmartFarmDevice()
+    private val mContext = mContext
     private val did = did
     private val resultListener = listener
     private val plainNames = context.resources.getStringArray(R.array.produce)
@@ -56,7 +58,11 @@ class NewDeviceDialog(mContext: Context, did: String, listener: DeviceCallback) 
         cropTypeLayout = findViewById(R.id.newDevice_LAY_cropTypeLayout)
         cropTypeList = findViewById(R.id.newDevice_LAY_cropTypeText)
         val adapter =
-            ProduceListAdapter(context, R.layout.row_produce_item, getCropsFromResources())
+            ProduceListAdapter(
+                context,
+                R.layout.row_produce_item,
+                CodingTools.getCropsFromResources(mContext)
+            )
         cropTypeList.setAdapter(adapter)
         cropTypeList.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(
@@ -84,35 +90,6 @@ class NewDeviceDialog(mContext: Context, did: String, listener: DeviceCallback) 
         }
     }
 
-    /** This method will return an array of produceRow from the app resources
-     * the method will get the names and extract the drawables png files*/
-    private fun getCropsFromResources(): ArrayList<ProduceRow> {
-        Log.d(TAG, "populateCropList: ")
-        // A list of names that matches the produce names in the drawable
-        plainNames.sort()
-        val produceList = arrayListOf<ProduceRow>()
-        for (item in plainNames) {
-            val temp = ProduceRow()
-            var drawableName = item
-            temp.name = item
-
-            drawableName = drawableName.toLowerCase()
-            if (drawableName.contains(' ')) {
-                drawableName = drawableName.replace(
-                    ' ',
-                    '_'
-                ) // replace the spaces with _ to match the drawable names
-            }
-            Log.d(TAG, "getCropsFromResources: drawable name = $drawableName")
-
-            val id = context.resources
-                .getIdentifier(drawableName, "drawable", context.packageName) // get the id by name
-            Log.d(TAG, "getCropsFromResources: id = $id")
-            temp.icon = id
-            produceList.add(temp)
-        }
-        return produceList
-    }
 
     private fun checkValidInput(): Boolean {
         Log.d(TAG, "checkValidInput: ")
@@ -123,15 +100,8 @@ class NewDeviceDialog(mContext: Context, did: String, listener: DeviceCallback) 
             nameEdt.text?.clear()
             return false
         }
-        if (descriptionEdt.text.toString().trim().isNotEmpty()) {
-            descriptionLayout.error = null
-        } else {
-            descriptionLayout.error = "Please enter device name"
-            descriptionEdt.text?.clear()
-            return false
-        }
         if (cropTypeList.text.isEmpty()) {
-            cropTypeLayout.error = context.resources.getString(R.string.produce)
+            cropTypeLayout.error = context.resources.getString(R.string.produce_error)
         }
         return true
     }

@@ -182,10 +182,12 @@ object MongoTools {
                 }
             } else {
                 val error = it.error.errorCode.ordinal
-                Log.e(TAG, "Failed to log in anonymously: $error")
+
                 if (error == 174) {
                     Log.d(TAG, "loginApp: Email/Password problem")
                     resultListener.result(false, "Email/password problem")
+                } else {
+                    resultListener.result(false, error.toString())
                 }
             }
         }

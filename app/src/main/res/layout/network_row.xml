@@ -2,18 +2,18 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/networkRow_LAY_mainLayout"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:layout_alignParentTop="true"
-    android:layout_margin="3dp"
+    android:layout_height="200dp"
+    android:clickable="true"
+    android:background="@color/colorPrimary"
     android:backgroundTint="@color/colorPrimary"
+    android:foreground="?attr/selectableItemBackground"
+    android:layerType="hardware"
+    app:cardCornerRadius="20dp"
     app:cardElevation="5dp"
     app:cardMaxElevation="0dp"
-    app:strokeColor="#00BFA5"
-    app:strokeWidth="1dp">
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,14 +40,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/networkRow_IMG_icon"
+            android:text="Network1"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.485"
             app:layout_constraintStart_toEndOf="@+id/networkRow_IMG_icon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.11" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

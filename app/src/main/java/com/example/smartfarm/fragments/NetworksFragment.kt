@@ -1,6 +1,7 @@
 package com.example.smartfarm.fragments
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.NETWORK_LIST
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
+import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.adapters.NetworkListAdapter
 import com.example.smartfarm.controllers.DataController
 import com.example.smartfarm.dialogs.FirstNetworkDialog
@@ -44,12 +47,14 @@ class NetworksFragment(mContext: Context) : Fragment() {
         Log.d(TAG, "onCreate: NetworksFragment")
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreateView: NetworksFragment")
+        (requireActivity() as MainActivity).changeToolbarTitle(getString(R.string.networks))
 
         /** here we check if we already loaded this fragment, and therefore the bundle should
         not be empty.
@@ -62,34 +67,6 @@ class NetworksFragment(mContext: Context) : Fragment() {
             loadFromBundle()
         }
         return mView;
-    }
-
-    /** This method will load the info from the bundle*/
-    private fun loadFromBundle() {
-        Log.d(TAG, "loadFromBundle: ")
-        val value = savedState.get(NETWORK_LIST) as String
-        val turnsType = object : TypeToken<ArrayList<SmartFarmNetwork>>() {}.type
-        val turns = Gson().fromJson<ArrayList<SmartFarmNetwork>>(value, turnsType)
-        networkList = turns
-        updateNetworkList()
-    }
-
-    /** This method will load the fragment details from the cloud*/
-    private fun loadFromCloud() {
-        Log.d(TAG, "loadFromCloud: ")
-        dataController = DataController(mContext)
-        fetchUsersNetworks()
-    }
-
-    /** This callback happens when we move make a transaction to another fragment
-     * here we will save the fetched data to a bundle, to not load it from the server again
-     * upon entering the fragment again
-     */
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d(TAG, "onDestroyView: ")
-        val jsonList = Gson().toJson(networkList)
-        savedState.putSerializable(NETWORK_LIST, jsonList)
     }
 
     /** This method will fetch all the users networks from the server

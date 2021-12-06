@@ -15,6 +15,7 @@ package com.example.smartfarm.models
  * "active":"true/false value"
  * "produce":"string, the name of the crop that the device measures"
  * "description":"a string of the device details"
+ * "measure_interval":"a double value representing the measure interval in hours"
  * }
  */
 class SmartFarmDevice {
@@ -23,11 +24,14 @@ class SmartFarmDevice {
     var active: Boolean = false
     var produce: String = ""
     var description: String = ""
+    var measure_interval:Double = 0.0
 
     init {
     }
 
     override fun toString(): String {
-        return "\ndid: $did\nname: $name\nactive: $active\nproduce: $produce\ndecription: $description\n"
+        return "\ndid: $did\nname: $name\nactive: $active\nproduce: $produce\n" +
+                "decription: $description\n" +
+                "interval: $measure_interval\n"
     }
 }

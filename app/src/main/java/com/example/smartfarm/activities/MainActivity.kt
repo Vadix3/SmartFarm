@@ -1,34 +1,22 @@
 package com.example.smartfarm.activities
 
 
-import android.content.Context
-import android.content.IntentSender
-import android.location.Location
-import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import com.example.smartfarm.MyAppClass
-import com.example.smartfarm.MyAppClass.Constants.LOCATION_PERMISSION
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
-import com.example.smartfarm.fragments.HomeFragment
-import com.example.smartfarm.fragments.LoginFragment
-import com.example.smartfarm.fragments.NetworksFragment
-import com.example.smartfarm.fragments.SettingsFragment
+import com.example.smartfarm.fragments.*
+import com.example.smartfarm.interfaces.DeviceCallback
 import com.example.smartfarm.interfaces.LoginListener
+import com.example.smartfarm.models.SmartFarmDevice
+import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 
 class MainActivity : AppCompatActivity() {
@@ -44,26 +32,21 @@ class MainActivity : AppCompatActivity() {
 
 
     /** TESTING */
+    //TODO: make animations direction wise
 
+    /** This method will change the title of the global toolbar using the given text*/
+    fun changeToolbarTitle(title: String) {
+        Log.d(TAG, "changeToolbarTitle: ")
+        headToolbar.title = title
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        testMethod()
         initViews()
         initLoginSequence()
     }
 
-    private fun testMethod() {
-        homeFragment = HomeFragment(this)
-        CodingTools.switchFragment(
-            supportFragmentManager,
-            R.id.main_LAY_mainFrame,
-            homeFragment,
-            false,
-            ""
-        )
-    }
 
     /** A method to perform the login sequence:
      * 1. The login fragment will receive the email and password

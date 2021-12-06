@@ -1,8 +1,6 @@
 package com.example.smartfarm.fragments
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +16,7 @@ import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.CAMERA_PERMISSION
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
+import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.adapters.DeviceListAdapter
 import com.example.smartfarm.controllers.DataController
 import com.example.smartfarm.dialogs.NewDeviceDialog
@@ -164,6 +163,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
         savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreateView: Network details fragment")
+        (requireActivity() as MainActivity).changeToolbarTitle(network.name)
         val mView = inflater.inflate(R.layout.fragment_network_details, container, false)
         initViews(mView)
         dataController = DataController(mContext)
