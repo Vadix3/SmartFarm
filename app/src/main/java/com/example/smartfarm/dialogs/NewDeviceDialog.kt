@@ -43,66 +43,67 @@ class NewDeviceDialog(mContext: Context, did: String, listener: DeviceCallback) 
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_new_device)
-        initViews()
+//        initViews()
+        //TODO: This feature, init the views, check input and sent device
     }
-
-    private fun initViews() {
-        Log.d(TAG, "initViews: ")
-        nameLayout = findViewById(R.id.newDevice_LAY_nameLayout)
-        descriptionLayout = findViewById(R.id.newDevice_LAY_descriptionLayout)
-        nameEdt = findViewById(R.id.newDevice_EDT_name)
-        descriptionEdt = findViewById(R.id.newDevice_EDT_details)
-        deviceId = findViewById(R.id.newDevice_LAY_deviceId)
-        deviceId.text = did
-
-        cropTypeLayout = findViewById(R.id.newDevice_LAY_cropTypeLayout)
-        cropTypeList = findViewById(R.id.newDevice_LAY_cropTypeText)
-        val adapter =
-            ProduceListAdapter(
-                context,
-                R.layout.row_produce_item,
-                CodingTools.getCropsFromResources(mContext)
-            )
-        cropTypeList.setAdapter(adapter)
-        cropTypeList.onItemClickListener = object : AdapterView.OnItemClickListener {
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                device.produce = plainNames[id.toInt()]
-            }
-
-        }
-        submitBtn = findViewById(R.id.newDevice_BTN_create)
-        submitBtn.setOnClickListener {
-            if (checkValidInput()) {
-                Log.d(TAG, "initViews: name: ${nameEdt.text.toString()}")
-                device.did = did
-                device.name = nameEdt.text.toString()
-                device.description = descriptionEdt.text.toString()
-                device.active = true
-                Log.d(TAG, "initViews: sending device: $device")
-//                resultListener.getDevice(device)
-//                dismiss()
-            }
-        }
-    }
-
-
-    private fun checkValidInput(): Boolean {
-        Log.d(TAG, "checkValidInput: ")
-        if (nameEdt.text.toString().trim().isNotEmpty()) {
-            nameLayout.error = null
-        } else {
-            nameLayout.error = "Please enter device name"
-            nameEdt.text?.clear()
-            return false
-        }
-        if (cropTypeList.text.isEmpty()) {
-            cropTypeLayout.error = context.resources.getString(R.string.produce_error)
-        }
-        return true
-    }
+//
+//    private fun initViews() {
+//        Log.d(TAG, "initViews: ")
+//        nameLayout = findViewById(R.id.newDevice_LAY_nameLayout)
+//        descriptionLayout = findViewById(R.id.newDevice_LAY_descriptionLayout)
+//        nameEdt = findViewById(R.id.newDevice_EDT_name)
+//        descriptionEdt = findViewById(R.id.newDevice_EDT_details)
+//        deviceId = findViewById(R.id.newDevice_LAY_deviceId)
+//        deviceId.text = did
+//
+//        cropTypeLayout = findViewById(R.id.newDevice_LAY_cropTypeLayout)
+//        cropTypeList = findViewById(R.id.newDevice_LAY_cropTypeText)
+//        val adapter =
+//            ProduceListAdapter(
+//                context,
+//                R.layout.row_produce_item,
+//                CodingTools.getCropsFromResources(mContext)
+//            )
+//        cropTypeList.setAdapter(adapter)
+//        cropTypeList.onItemClickListener = object : AdapterView.OnItemClickListener {
+//            override fun onItemClick(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                device.produce = plainNames[id.toInt()]
+//            }
+//
+//        }
+//        submitBtn = findViewById(R.id.newDevice_BTN_create)
+//        submitBtn.setOnClickListener {
+//            if (checkValidInput()) {
+//                Log.d(TAG, "initViews: name: ${nameEdt.text.toString()}")
+//                device.did = did
+//                device.name = nameEdt.text.toString()
+//                device.description = descriptionEdt.text.toString()
+//                device.active = true
+//                Log.d(TAG, "initViews: sending device: $device")
+////                resultListener.getDevice(device)
+////                dismiss()
+//            }
+//        }
+//    }
+//
+//
+//    private fun checkValidInput(): Boolean {
+//        Log.d(TAG, "checkValidInput: ")
+//        if (nameEdt.text.toString().trim().isNotEmpty()) {
+//            nameLayout.error = null
+//        } else {
+//            nameLayout.error = "Please enter device name"
+//            nameEdt.text?.clear()
+//            return false
+//        }
+//        if (cropTypeList.text.isEmpty()) {
+//            cropTypeLayout.error = context.resources.getString(R.string.produce_error)
+//        }
+//        return true
+//    }
 }
