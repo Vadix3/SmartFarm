@@ -61,12 +61,51 @@ class NetworksFragment(mContext: Context) : Fragment() {
         instead we will load the information from the bundle instead of the cloud*/
         val mView = inflater.inflate(R.layout.fragment_networks, container, false)
         initViews(mView)
-        if (savedState.isEmpty) {
-            loadFromCloud()
+        if (CodingTools.isOnline(mContext)) {
+            if (savedState.isEmpty) {
+                loadFromCloud()
+            } else {
+                loadFromBundle()
+            }
         } else {
-            loadFromBundle()
+            loadDataFromSP()
         }
         return mView;
+    }
+
+    /** This method will load the most latest data from SP */
+    private fun loadDataFromSP() {
+        Log.d(TAG, "loadDataFromSP: ")
+        CodingTools.displayErrorDialog(mContext, mContext.getString(R.string.loading_data_from_sp))
+        //TODO: ROOM
+    }
+
+    /** This method will load the info from the bundle*/
+    private fun loadFromBundle() {
+        Log.d(TAG, "loadFromBundle: ")
+        val value = savedState.get(NETWORK_LIST) as String
+        val turnsType = object : TypeToken<ArrayList<SmartFarmNetwork>>() {}.type
+        val turns = Gson().fromJson<ArrayList<SmartFarmNetwork>>(value, turnsType)
+        networkList = turns
+        updateNetworkList()
+    }
+
+    /** This method will load the fragment details from the cloud*/
+    private fun loadFromCloud() {
+        Log.d(TAG, "loadFromCloud: ")
+        dataController = DataController(mContext)
+        fetchUsersNetworks()
+    }
+
+    /** This callback happens when we move make a transaction to another fragment
+     * here we will save the fetched data to a bundle, to not load it from the server again
+     * upon entering the fragment again
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
+        val jsonList = Gson().toJson(networkList)
+        savedState.putSerializable(NETWORK_LIST, jsonList)
     }
 
     /** This method will fetch all the users networks from the server
