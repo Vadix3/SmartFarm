@@ -20,20 +20,20 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/data_IMG_stats"
             android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="30dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:layout_height="40dp"
-            android:layout_marginEnd="30dp"
-            android:layout_gravity="center"
             android:src="@drawable/ic_baseline_bar_chart_24" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/data_LBL_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vadim's Farm"
-            android:textColor="@color/colorText"
             android:layout_marginEnd="30dp"
+            android:text="@string/latest_data"
+            android:textColor="@color/colorText"
             android:textSize="40sp"
             android:textStyle="bold" />
 
@@ -41,11 +41,10 @@
             android:id="@+id/data_IMG_settings"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_gravity="center"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:layout_gravity="center"
             android:src="@drawable/ic_baseline_settings_24" />
-
 
     </LinearLayout>
 
@@ -80,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/data_LBL_date"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Date: 10/10/10"
@@ -104,7 +103,7 @@
 
                 <TextView
                     android:id="@+id/data_LBL_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Time: 20:35"
@@ -128,11 +127,22 @@
 
                 <TextView
                     android:id="@+id/data_LBL_humidity"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Humidity: 10/10/10"
                     android:textSize="25sp" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/data_IMG_humidityInfo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:visibility="gone"
+                    android:background="@drawable/ic_baseline_info_24"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground" />
 
             </LinearLayout>
 
@@ -152,11 +162,21 @@
 
                 <TextView
                     android:id="@+id/data_LBL_temperature"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Temperature: 20C"
                     android:textSize="25sp" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/data_IMG_temperatureInfo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_baseline_info_24"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground" />
 
             </LinearLayout>
 
@@ -176,11 +196,21 @@
 
                 <TextView
                     android:id="@+id/data_LBL_soil"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Soil moisture: 40"
                     android:textSize="25sp" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/data_IMG_soilMoistureInfo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_baseline_info_24"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground" />
 
             </LinearLayout>
 
@@ -200,11 +230,21 @@
 
                 <TextView
                     android:id="@+id/data_LBL_light"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Light exposure: 55"
                     android:textSize="25sp" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/data_IMG_lightInfo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_baseline_info_24"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground" />
 
             </LinearLayout>
 
@@ -224,15 +264,23 @@
 
                 <TextView
                     android:id="@+id/data_LBL_uv"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="UV exposure: 63"
                     android:textSize="25sp" />
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/data_IMG_uvInfo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/ic_baseline_info_24"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground" />
+
             </LinearLayout>
-
-
         </LinearLayout>
     </ScrollView>
 

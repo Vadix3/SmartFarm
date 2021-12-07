@@ -7,19 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import com.example.smartfarm.MyAppClass
+import com.example.smartfarm.MyAppClass.Constants.HUMIDITY
+import com.example.smartfarm.MyAppClass.Constants.LIGHT_EXPOSURE
+import com.example.smartfarm.MyAppClass.Constants.SOIL_MOISTURE
 import com.example.smartfarm.MyAppClass.Constants.TAG
+import com.example.smartfarm.MyAppClass.Constants.TEMPERATURE
+import com.example.smartfarm.MyAppClass.Constants.UV_EXPOSURE
+import com.example.smartfarm.MyAppClass.Constants.WRAP_CONTENT
 import com.example.smartfarm.R
 import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.controllers.DataController
+import com.example.smartfarm.dialogs.TipDialog
 import com.example.smartfarm.interfaces.DeviceCallback
 import com.example.smartfarm.interfaces.ResultListener
 import com.example.smartfarm.models.CommandModel
+import com.example.smartfarm.models.ProduceTip
 import com.example.smartfarm.models.SmartFarmData
 import com.example.smartfarm.models.SmartFarmDevice
 import com.example.smartfarm.utils.CodingTools
+import com.example.smartfarm.utils.ProduceTools
 import com.google.android.material.imageview.ShapeableImageView
 
 /** This is a fragment that displays the given collected data
@@ -33,8 +42,6 @@ import com.google.android.material.imageview.ShapeableImageView
  * uv 0-100 (40-100 direct sunlight,0-30 +- shade,10-20 clouds in shade, 15-35 clouds,12-13 clouds and cover & evening. 7 more evening)
  *  ######### Check UV sensor wiring #########
  *
- * ========= NIGHT ============
- *
  * */
 class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevice) : Fragment() {
 
@@ -45,6 +52,9 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
 
     private lateinit var settingsIcon: ShapeableImageView
     private lateinit var statsIcon: ShapeableImageView
+
+    // A list of tips objects
+    private lateinit var growingTips: ArrayList<ProduceTip>
 
     // Textviews - date, time, humidity, temp, soil, light, uv, title
     private lateinit var dateLbl: TextView
@@ -66,6 +76,12 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
     private lateinit var uvImg: ShapeableImageView
     private lateinit var titleImg: ShapeableImageView
 
+    private lateinit var humidityInfo: ShapeableImageView
+    private lateinit var temperatureInfo: ShapeableImageView
+    private lateinit var soilInfo: ShapeableImageView
+    private lateinit var lightInfo: ShapeableImageView
+    private lateinit var uvInfo: ShapeableImageView
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,21 +93,70 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
         (requireActivity() as MainActivity).changeToolbarTitle(device.name)
         val mView = inflater.inflate(R.layout.fragment_data, container, false)
         dataController = DataController(mContext)
+        checkRecommendations()
         initViews(mView)
-        getRecommendations()
         return mView;
     }
 
-    /** This method will fetch growing recommendations according to the measured produce.
-     *  recommendations regarding sunlight, water and temperature at this point.
-     *  the method will check the recommended values and compare them to the measured ones,
-     *  and will display a message to the user
-     *  measured values:
+    /** This method will compare the current crop data and the recommended ones
+     * and will display a '!' icon near the relevant measurement, meaning there is a recommendation
+     * for this specific measurement.
      *
      */
-    private fun getRecommendations() {
-        val recommended = CodingTools.getSingleCropDetails(requireActivity(), device.produce)
+    private fun checkRecommendations() {
+        Log.d(TAG, "checkRecommendations: ")
+        growingTips = arrayListOf()
+        // All recommendations for the specific produce
+        val recommended = ProduceTools.getSingleCropDetails(requireActivity(), device.produce)
+        val waterTips = ProduceTools.getWaterTips(mContext, data.soil, recommended.water)
+        growingTips.add(waterTips)
+        val temperatureTips = ProduceTools.getTemperatureTips(
+            mContext,
+            data.temperature,
+            recommended.minTemp,
+            recommended.maxTemp
+        )
+        growingTips.add(temperatureTips)
+        val lightTips = ProduceTools.getLightTips(mContext, data.light, recommended.sun)
+        growingTips.add(lightTips)
+        val uvTips = ProduceTools.getUVTips(mContext, data.uv, recommended.sun)
+        growingTips.add(uvTips)
 
+        val humidityTips = ProduceTip()
+        growingTips.add(humidityTips)
+    }
+
+
+    /** This method will open a recommendation dialog according to data
+     *
+     * */
+    private fun openRecommendations(key: Int) {
+        var thisTip = ProduceTip()
+
+        when (key) { // determine which tip is it
+            HUMIDITY -> {
+                thisTip = growingTips[HUMIDITY]
+                thisTip.name = getString(R.string.humidity)
+            }
+            TEMPERATURE -> {
+                thisTip = growingTips[TEMPERATURE]
+                thisTip.name = getString(R.string.temperature)
+            }
+            SOIL_MOISTURE -> {
+                thisTip = growingTips[SOIL_MOISTURE]
+                thisTip.name = getString(R.string.soil_moisture)
+            }
+            LIGHT_EXPOSURE -> {
+                thisTip = growingTips[LIGHT_EXPOSURE]
+                thisTip.name = getString(R.string.light_exposure)
+            }
+            UV_EXPOSURE -> {
+                thisTip = growingTips[UV_EXPOSURE]
+                thisTip.name = getString(R.string.uv_exposure)
+            }
+        }
+        val dialog = TipDialog(mContext, thisTip)
+        CodingTools.openDialog(mContext, dialog, WRAP_CONTENT, WRAP_CONTENT, 0.8f)
     }
 
     private fun initViews(mView: View) {
@@ -125,6 +190,34 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
         lightImg = mView.findViewById(R.id.data_IMG_light)
         uvImg = mView.findViewById(R.id.data_IMG_uv)
 
+        humidityInfo = mView.findViewById(R.id.data_IMG_humidityInfo)
+        humidityInfo.setOnClickListener { openRecommendations(HUMIDITY) }
+        // Display a yellow icon if there is any attention needed
+        if (growingTips[HUMIDITY].alert) {
+            humidityInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        }
+        temperatureInfo = mView.findViewById(R.id.data_IMG_temperatureInfo)
+        temperatureInfo.setOnClickListener { openRecommendations(TEMPERATURE) }
+        if (growingTips[TEMPERATURE].alert) {
+            temperatureInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        }
+        soilInfo = mView.findViewById(R.id.data_IMG_soilMoistureInfo)
+        soilInfo.setOnClickListener { openRecommendations(SOIL_MOISTURE) }
+        if (growingTips[SOIL_MOISTURE].alert) {
+            soilInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        }
+        lightInfo = mView.findViewById(R.id.data_IMG_lightInfo)
+        lightInfo.setOnClickListener { openRecommendations(LIGHT_EXPOSURE) }
+        if (growingTips[LIGHT_EXPOSURE].alert) {
+            lightInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        }
+        uvInfo = mView.findViewById(R.id.data_IMG_uvInfo)
+        uvInfo.setOnClickListener { openRecommendations(UV_EXPOSURE) }
+        if (growingTips[UV_EXPOSURE].alert) {
+            uvInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        }
+
+
         //inject values
         dateLbl.text = resources.getString(R.string.date) + ": " + data.date
         timeLbl.text = resources.getString(R.string.time) + ": " + data.time
@@ -135,7 +228,7 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
             ) + "%"
         tempLbl.text =
             resources.getString(R.string.temperature) + ": " + String.format(
-                "%.2f",
+                "%.1f",
                 data.temperature
             )
         soilLbl.text = resources.getString(R.string.soil_moisture) + ": " + data.soil.toString()
@@ -143,6 +236,7 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
         uvLbl.text = resources.getString(R.string.uv_exposure) + ": " + data.uv.toString()
         titleLbl.text = device.name
     }
+
 
     /** This method will open the statistics page for the selected device*/
     private fun openStats() {

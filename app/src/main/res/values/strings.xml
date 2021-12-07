@@ -50,8 +50,25 @@
     <string name="device_id">Device ID</string>
     <string name="device_name">Device Name</string>
 
-    <string name="devices">Devices</string>
+    <string name="latest_data">Latest Data</string>
 
+    <string name="measured_value">Measured Value:</string>
+    <string name="optimal_value">Optimal value:</string>
+    <string name="measured_category">Measured Category:</string>
+    <string name="optimal_category">Optimal Category:</string>
+    <string name="recommendation">Recommendation:</string>
+    <string name="devices">Devices</string>
+    <string name="too_much_light">Too much light</string>
+    <string name="not_enough_light">Not enough light</string>
+    <string name="light_just_right">Light is just right</string>
+    <string name="too_much_sun">Too much sun</string>
+    <string name="not_enough_sun">Not enough sun</string>
+    <string name="light_just_sun">Sun is just right</string>
+    <string name="too_much_water">Too much water</string>
+    <string name="not_enough_water">Not enough water</string>
+    <string name="water_just_right">Water is just right</string>
+    <string name="too_cold">It is too cold</string>
+    <string name="too_hot">It is too hot</string>
     <string name="network_name">Network Name</string>
     <string name="error_changing_interval">Error changing interval: </string>
     <string name="error_changing_switch">Error switching device on/off: </string>
