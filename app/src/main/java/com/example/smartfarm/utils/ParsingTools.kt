@@ -1,6 +1,11 @@
 package com.example.smartfarm.utils
 
 import android.util.Log
+import com.example.smartfarm.MyAppClass.Constants.DRY_WATER
+import com.example.smartfarm.MyAppClass.Constants.MODERATE_MINUS_WATER
+import com.example.smartfarm.MyAppClass.Constants.MODERATE_PLUS_WATER
+import com.example.smartfarm.MyAppClass.Constants.MODERATE_WATER
+import com.example.smartfarm.MyAppClass.Constants.SOAKED
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.models.*
 import org.bson.Document
@@ -49,7 +54,7 @@ object ParsingTools {
         data.name = item["name"] as String
         data.active = item["active"] as Boolean
         data.description = item["description"] as String
-        data.measure_interval=item["measure_interval"]as Double
+        data.measure_interval = item["measure_interval"] as Double
         return data
     }
 
@@ -59,10 +64,11 @@ object ParsingTools {
         document.append("description", device.description)
         document.append("did", device.did)
         document.append("active", device.active)
-        document.append("produce",device.produce)
-        document.append("measure_interval",device.measure_interval)
+        document.append("produce", device.produce)
+        document.append("measure_interval", device.measure_interval)
         return document
     }
+
 
     fun parseWeather(item: JSONObject): WeatherReport {
         val data = WeatherReport()

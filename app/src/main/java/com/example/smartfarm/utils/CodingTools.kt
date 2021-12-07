@@ -163,27 +163,7 @@ object CodingTools {
         return temp
     }
 
-    /** This method will fetch a single crop details object from the array using the name*/
-    fun getSingleCropDetails(activity: Activity, name: String): CropDetails {
-        val tempObject = CropDetails()
-        val data = loadJSONFromAsset(activity, "crop_details.json")
-        if (data != null) {
-            val cropArray = data.get("crops") as JSONArray
-            for (i in 0 until cropArray.length()) {
-                val item = cropArray.get(i) as JSONObject
-                if (item.get("name") == name) {
-                    val tips = item.get("tips") as JSONObject
-                    tempObject.id = item.get("id") as String
-                    tempObject.name = item.get("name") as String
-                    tempObject.sun = tips.get("sun") as String
-                    tempObject.water = tips.get("water") as String
-                    tempObject.minTemp = tips.get("min_temp") as Int
-                    tempObject.maxTemp = tips.get("max_temp") as Int
-                }
-            }
-        }
-        return tempObject
-    }
+
 
     fun getWeatherAPIKey(context: Context): String {
         val ai: ApplicationInfo = context.packageManager

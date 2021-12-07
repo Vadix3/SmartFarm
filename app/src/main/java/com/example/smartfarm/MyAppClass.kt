@@ -33,9 +33,50 @@ class MyAppClass : Application() {
         const val CHANGE_DURATION_COMMAND = 0
         const val INTERVAL_COMMAND = 0
         const val SWITCH_COMMAND = 1
-
         const val WRAP_CONTENT = WindowManager.LayoutParams.WRAP_CONTENT
         var USER_EMAIL = ""
+
+        // measure data constants
+        const val HUMIDITY = 4
+        const val TEMPERATURE = 1
+        const val SOIL_MOISTURE = 0
+        const val LIGHT_EXPOSURE = 2
+        const val UV_EXPOSURE = 3
+
+
+        /**
+         * - Water possible values (current measurement, very approximate):
+         *      moderate =  550-600
+         *      moderate+ = 600-650
+         *      moderate- = 500-600
+         *
+         * - Sun possible values:
+         *      full or partial = 20-100
+         *      partial or shade = 10-50
+         *      full = 50-100
+         *      shade or no sun = 0-10
+         *      */
+
+        const val MODERATE_WATER = "Moderate"
+        const val MODERATE_PLUS_WATER = "Moderate+"
+        const val MODERATE_MINUS_WATER = "Moderate-"
+        const val DRY_WATER = "Dry"
+        const val SOAKED = "Soaked"
+        const val FULL_OR_PARTIAL_SUN = "Full or partial"
+        const val PARTIAL_OR_SHADE_SUN = "Partial or shade"
+        const val FULL_SUN = "Full"
+        const val SHADE_OR_NO_SUN = "Shade or no sun"
+
+        const val MODERATE_WATER_FLAG = 2
+        const val MODERATE_PLUS_WATER_FLAG = 3
+        const val MODERATE_MINUS_WATER_FLAG = 1
+        const val DRY_WATER_FLAG = 0
+        const val SOAKED_FLAG = 4
+        const val FULL_OR_PARTIAL_SUN_FLAG = 2
+        const val PARTIAL_OR_SHADE_SUN_FLAG = 1
+        const val FULL_SUN_FLAG = 3
+        const val SHADE_OR_NO_SUN_FLAG = 0
+
     }
 
 }
