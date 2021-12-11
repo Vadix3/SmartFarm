@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp">
@@ -19,8 +20,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/data_IMG_stats"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginEnd="30dp"
             android:clickable="true"
@@ -34,13 +35,13 @@
             android:layout_marginEnd="30dp"
             android:text="@string/latest_data"
             android:textColor="@color/colorText"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/data_IMG_settings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
@@ -52,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/data_BTN_readNewData"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/data_LAY_headLayout">
@@ -67,14 +68,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_date"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/calendar" />
 
                 <TextView
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Date: 10/10/10"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
@@ -91,14 +91,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_time"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/clock" />
 
                 <TextView
@@ -107,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Time: 20:35"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
@@ -115,14 +114,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_humidity"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/humidity" />
 
                 <TextView
@@ -131,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Humidity: 10/10/10"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_humidityInfo"
@@ -139,10 +137,10 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:visibility="gone"
                     android:background="@drawable/ic_baseline_info_24"
                     android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground" />
+                    android:foreground="?attr/selectableItemBackground"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -150,14 +148,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_temperature"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/hot" />
 
                 <TextView
@@ -166,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Temperature: 20C"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_temperatureInfo"
@@ -184,14 +181,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_soil"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/soil" />
 
                 <TextView
@@ -200,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Soil moisture: 40"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_soilMoistureInfo"
@@ -218,14 +214,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_light"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/sun" />
 
                 <TextView
@@ -234,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Light exposure: 55"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_lightInfo"
@@ -252,14 +247,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_uv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/uv" />
 
                 <TextView
@@ -268,7 +262,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="UV exposure: 63"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/data_IMG_uvInfo"
@@ -280,9 +274,25 @@
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground" />
 
+
             </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 
-
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/data_BTN_readNewData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:padding="15dp"
+        android:text="@string/read_new_data"
+        android:textColor="@color/white"
+        app:cornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

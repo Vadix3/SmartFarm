@@ -31,8 +31,11 @@ class MyAppClass : Application() {
         const val TURN_OFF_COMMAND = 2
         const val TURN_ON_COMMAND = 1
         const val CHANGE_DURATION_COMMAND = 0
+
+
         const val INTERVAL_COMMAND = 0
         const val SWITCH_COMMAND = 1
+        const val MEASURE_NOW_COMMAND = 2
         const val WRAP_CONTENT = WindowManager.LayoutParams.WRAP_CONTENT
         var USER_EMAIL = ""
 
