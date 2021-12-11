@@ -211,8 +211,10 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
                 if (result) {
                     deviceList = devices!! // could be empty
                     if (devices.isNotEmpty()) {
+                        Log.d(TAG, "getDevices: devices not empty")
                         noDevicesText.visibility = View.GONE
                     } else {
+                        Log.d(TAG, "getDevices: devices empty")
                         noDevicesText.visibility = View.VISIBLE
                     }
                     updateDevicesList() // refresh the document list

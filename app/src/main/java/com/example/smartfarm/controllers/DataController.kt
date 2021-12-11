@@ -3,6 +3,8 @@ package com.example.smartfarm.controllers
 import android.content.Context
 import android.util.Log
 import com.example.smartfarm.MyAppClass
+import com.example.smartfarm.MyAppClass.Constants.DATA_COLLECTION
+import com.example.smartfarm.MyAppClass.Constants.DB_NAME
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.interfaces.*
 import com.example.smartfarm.models.CommandModel
@@ -201,5 +203,27 @@ class DataController(context: Context) {
             Document("did", device.did),
             listener
         )
+    }
+
+    /** This method will listen for data measurement changes in the data document
+     * it will return the new object / null in case of no new objects
+     */
+    fun listenForDataChanges(measurementCallback: MeasurementCallback, did: String) {
+        Log.d(TAG, "listenForDataChanges: Controller")
+        MongoTools.listenForChanges(DB_NAME, DATA_COLLECTION, object : ResultListener {
+            override fun result(result: Boolean, message: String) {
+                if (result) {
+                    Log.d(TAG, "result: New data = $message")
+                    val fixedJson = JSONObject(message)
+                    measurementCallback.getMeasurement(
+                        ParsingTools.parseMeasurement(
+                            fixedJson
+                        )
+                    )
+                } else {
+                    measurementCallback.getMeasurement(null)
+                }
+            }
+        }, Document("fullDocument.device", did))
     }
 }

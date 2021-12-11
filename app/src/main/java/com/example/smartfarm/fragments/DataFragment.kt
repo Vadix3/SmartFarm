@@ -1,6 +1,7 @@
 package com.example.smartfarm.fragments
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.load.data.DataFetcher
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.HUMIDITY
 import com.example.smartfarm.MyAppClass.Constants.LIGHT_EXPOSURE
@@ -22,14 +25,20 @@ import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.controllers.DataController
 import com.example.smartfarm.dialogs.TipDialog
 import com.example.smartfarm.interfaces.DeviceCallback
+import com.example.smartfarm.interfaces.MeasurementCallback
 import com.example.smartfarm.interfaces.ResultListener
 import com.example.smartfarm.models.CommandModel
 import com.example.smartfarm.models.ProduceTip
 import com.example.smartfarm.models.SmartFarmData
 import com.example.smartfarm.models.SmartFarmDevice
 import com.example.smartfarm.utils.CodingTools
+import com.example.smartfarm.utils.ParsingTools
 import com.example.smartfarm.utils.ProduceTools
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 /** This is a fragment that displays the given collected data
  *  The data shown:
@@ -46,7 +55,7 @@ import com.google.android.material.imageview.ShapeableImageView
 class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevice) : Fragment() {
 
     val mContext = mContext;
-    private val data: SmartFarmData = data
+    private var data: SmartFarmData = data
     private var device: SmartFarmDevice = device
     private lateinit var dataController: DataController
 
@@ -81,6 +90,7 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
     private lateinit var soilInfo: ShapeableImageView
     private lateinit var lightInfo: ShapeableImageView
     private lateinit var uvInfo: ShapeableImageView
+    private lateinit var readNewDataBtn: MaterialButton
 
 
     override fun onCreateView(
@@ -95,7 +105,28 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
         dataController = DataController(mContext)
         checkRecommendations()
         initViews(mView)
+        listenForDataChanges()
         return mView;
+    }
+
+    /** This method will initialize the data change listener*/
+    private fun listenForDataChanges() {
+        Log.d(TAG, "listenForDataChanges: ")
+        dataController.listenForDataChanges(object : MeasurementCallback {
+            override fun getMeasurement(newData: SmartFarmData?) {
+                if (newData != null) { // if there is some data
+                    data = newData // update new data
+                    requireActivity().runOnUiThread {
+                        updatePageUI()
+                    }
+                } else {
+                    CodingTools.displayErrorDialog(
+                        mContext,
+                        getString(R.string.error_fetching_data)
+                    )
+                }
+            }
+        }, device.did)
     }
 
     /** This method will compare the current crop data and the recommended ones
@@ -162,6 +193,8 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
     private fun initViews(mView: View) {
         Log.d(TAG, "initViews: ")
 
+        readNewDataBtn = mView.findViewById(R.id.data_BTN_readNewData)
+        readNewDataBtn.setOnClickListener { readFreshData() }
         settingsIcon = mView.findViewById(R.id.data_IMG_settings)
         settingsIcon.setOnClickListener {
             openSettings()
@@ -193,44 +226,90 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
         humidityInfo = mView.findViewById(R.id.data_IMG_humidityInfo)
         humidityInfo.setOnClickListener { openRecommendations(HUMIDITY) }
         // Display a yellow icon if there is any attention needed
-        if (growingTips[HUMIDITY].alert) {
-            humidityInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
-        }
         temperatureInfo = mView.findViewById(R.id.data_IMG_temperatureInfo)
         temperatureInfo.setOnClickListener { openRecommendations(TEMPERATURE) }
-        if (growingTips[TEMPERATURE].alert) {
-            temperatureInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
-        }
         soilInfo = mView.findViewById(R.id.data_IMG_soilMoistureInfo)
         soilInfo.setOnClickListener { openRecommendations(SOIL_MOISTURE) }
-        if (growingTips[SOIL_MOISTURE].alert) {
-            soilInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
-        }
         lightInfo = mView.findViewById(R.id.data_IMG_lightInfo)
         lightInfo.setOnClickListener { openRecommendations(LIGHT_EXPOSURE) }
-        if (growingTips[LIGHT_EXPOSURE].alert) {
-            lightInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
-        }
         uvInfo = mView.findViewById(R.id.data_IMG_uvInfo)
         uvInfo.setOnClickListener { openRecommendations(UV_EXPOSURE) }
+        updatePageUI()
+    }
+
+    /** This method will read fresh data from the device and update the UI with the new data*/
+    private fun readFreshData() {
+        Log.d(TAG, "readFreshData: ")
+        readNewDataBtn.isActivated = false
+        val command = CommandModel()
+        command.type = 2 // measure once
+        command.data = System.currentTimeMillis().toString()
+        command.deviceId = device.did
+        command.id = UUID.randomUUID().toString()
+
+        readNewDataBtn.text = ""
+        val circularProgressDrawable = CircularProgressDrawable(mContext)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
+        readNewDataBtn.background = circularProgressDrawable
+        readNewDataBtn.isActivated = false
+
+        dataController.sendCommand(command, object : ResultListener {
+            override fun result(result: Boolean, message: String) {
+                if (result) {
+                    Log.d(TAG, "result: SUCCESS: $message")
+                } else {
+                    Log.d(TAG, "result: ERROR: $message")
+                    CodingTools.displayErrorDialog(mContext, "Error: $message")
+                }
+            }
+        })
+
+
+    }
+
+    /** This method will update the page UI to match the global data object*/
+    private fun updatePageUI() {
+        Log.d(TAG, "updatePageUI: ")
+        checkRecommendations()
+        readNewDataBtn.text = getText(R.string.read_new_data)
+        readNewDataBtn.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
+        readNewDataBtn.isActivated = true
+
+        if (growingTips[HUMIDITY].alert) {
+            humidityInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        } else {
+            humidityInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+        }
         if (growingTips[UV_EXPOSURE].alert) {
             uvInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        } else {
+            uvInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
         }
-
-
+        if (growingTips[TEMPERATURE].alert) {
+            temperatureInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        } else {
+            temperatureInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+        }
+        if (growingTips[SOIL_MOISTURE].alert) {
+            soilInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        } else {
+            soilInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+        }
+        if (growingTips[LIGHT_EXPOSURE].alert) {
+            lightInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        } else {
+            lightInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+        }
         //inject values
         dateLbl.text = resources.getString(R.string.date) + ": " + data.date
         timeLbl.text = resources.getString(R.string.time) + ": " + data.time
         humidityLbl.text =
-            resources.getString(R.string.humidity) + ": " + String.format(
-                "%.2f",
-                data.humidity
-            ) + "%"
+            resources.getString(R.string.humidity) + ": " + data.humidity.roundToInt() + "%"
         tempLbl.text =
-            resources.getString(R.string.temperature) + ": " + String.format(
-                "%.1f",
-                data.temperature
-            )
+            resources.getString(R.string.temperature) + ": " + data.temperature.roundToInt() + "°C"
         soilLbl.text = resources.getString(R.string.soil_moisture) + ": " + data.soil.toString()
         lightLbl.text = resources.getString(R.string.light_exposure) + ": " + data.light.toString()
         uvLbl.text = resources.getString(R.string.uv_exposure) + ": " + data.uv.toString()

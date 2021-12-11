@@ -234,5 +234,34 @@ object MongoTools {
         }
     }
 
+    /** This method will listen for changes in the Data document, and will return the new data
+     * using the provided callback
+     */
+    fun listenForChanges(
+        dbName: String,
+        collection: String,
+        listener: ResultListener,
+        filter: Document
+    ) {
+        Log.d(TAG, "listenForChanges TOOLS:db: $dbName collection: $collection, filter: $filter")
+
+        val mongoClient: MongoClient =
+            user.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(dbName)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(collection)!!
+        val watcher = mongoCollection
+            .watchWithFilterAsync(filter)
+        watcher[{ result ->
+            if (result.isSuccess) {
+                val full = result.get().fullDocument!!.toJson().toString()
+                listener.result(true, full)
+            } else {
+                listener.result(false, result.error.toString())
+            }
+        }]
+    }
+
 }
 

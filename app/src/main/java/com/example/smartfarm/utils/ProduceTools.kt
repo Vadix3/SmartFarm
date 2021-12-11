@@ -23,10 +23,6 @@ import kotlin.math.roundToInt
 
 object ProduceTools {
 
-    const val WATER = 0
-    const val SUN = 1
-    const val TEMPERATURE = 2
-
     /** soil moisture 0-700 +- (700 in water, 8 +- dry ground, 650 +- wet ground just watered
      * ,588,678 little drained after watering,
      * )
@@ -170,6 +166,8 @@ object ProduceTools {
         }
         return tips
     }
+
+
 
 
     /** This method will fetch a single crop details object from the array using the name*/

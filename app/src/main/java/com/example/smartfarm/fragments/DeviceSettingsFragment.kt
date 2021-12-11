@@ -113,8 +113,15 @@ class DeviceSettingsFragment(mContext: Context, device: SmartFarmDevice, listene
         }
 
         intervalSlider.addOnChangeListener { rangeSlider, value, fromUser ->
-            measurementTitle.text =
-                "${getString(R.string.measure_interval)}:${value}h"
+            // value = time in hours
+            // time in minutes = value * 60
+            var text = ""
+            text = if (value < 1) { // minutes
+                "${getString(R.string.measure_interval)}:${String.format("%.0f", value * 60)}m"
+            } else {
+                "${getString(R.string.measure_interval)}:${String.format("%.2f", value)}h"
+            }
+            measurementTitle.text = text
         }
 
         submitBtn = mView.findViewById(R.id.deviceSettings_BTN_submit)

@@ -8,7 +8,7 @@
     <string name="loading_data_from_sp">No internet connection. Loading latest saved data, which might be outdated.</string>
     <string name="device_settings">Device settings</string>
     <string name="measure_interval">Measurement interval</string>
-    <string name="measurement_info">This time indicates how long should the device wait between measurements, in hours</string>
+    <string name="measurement_info">This time indicates how long should the device wait between measurements.\nh - hours, m - minutes</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="produce_info">Choose which crop type the device is measuring</string>
     <string name="yes">Yes</string>
@@ -80,6 +80,7 @@
 
     <string name="date">Date</string>
     <string name="time">Time</string>
+    <string name="read_new_data">Read new data</string>
     <string name="humidity">Humidity</string>
     <string name="temperature">Temperature</string>
     <string name="soil_moisture">Soil Moisture</string>
@@ -194,6 +195,7 @@
 
 
     <string name="base_icon_link">https://openweathermap.org/img/wn/</string>
+    <string name="error_fetching_data">"Error fetching data! "</string>
 </resources>
 
 
