@@ -1,4 +1,26 @@
 <resources>
+    // h d w m y interval
+    <string name="hourly">Hourly</string>
+    <string name="no_data_sad">No Data :(</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="from_date">From date</string>
+    <string name="to_date">To date</string>
+    <string name="from_time">From time</string>
+    <string name="to_time">To time</string>
+    <string name="average">Average</string>
+    <string name="save_to_device">Save to device</string>
+    <string name="share">Share</string>
+    <string name="last_24_hours">Last 24 hours</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="pick_dates">Pick dates</string>
+    <string name="click_submit">Click submit</string>
+    <string name="custom">Custom</string>
+    <string name="no_data">No data</string>
+    <string name="no_data_for_given_time">No data for given time</string>
     <string name="app_name">SmartFarm</string>
     <string name="app_id">smartfarm-thpgu</string>
     <string name="please_enter_device_name">Please enter a device name</string>
@@ -137,6 +159,23 @@
     <string name="garlic">Garlic</string>
     <string name="asparagus">Asparagus</string>
     <string name="spring_onion">Spring onion</string>
+
+    <array name="initial_slider_values">
+        <item>1.0</item>
+        <item>5.0</item>
+        <item>10.0</item>
+        <item>15.0</item>
+        <item>30.0</item>
+        <item>60.0</item>
+        <item>90.0</item>
+        <item>2.0</item>
+        <item>4.0</item>
+        <item>6.0</item>
+        <item>8.0</item>
+        <item>12.0</item>
+        <item>24.0</item>
+    </array>
+
 
     <string-array name="produce">
         <item>@string/turnip</item>

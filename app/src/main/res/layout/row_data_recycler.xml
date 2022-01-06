@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/networkRow_LAY_mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="155dp"
+    android:background="@color/white"
+    android:backgroundTint="@color/white"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:layerType="hardware"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp"
+    app:cardMaxElevation="0dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dataRow_LBL_noData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_data_sad"
+        android:textColor="@color/colorSecondary"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/dataRow_LAY_mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <!--Row 1-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--Col 1-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/dataRow_IMG_date"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/calendar" />
+
+                <TextView
+                    android:id="@+id/dataRow_LBL_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="Date: 10/10/10"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!--Col 2-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/dataRow_IMG_time"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/clock" />
+
+                <TextView
+                    android:id="@+id/dataRow_LBL_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="Time: 20:35"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--Row 2-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--Col 1-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/dataRow_IMG_humidity"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/humidity" />
+
+                <TextView
+                    android:id="@+id/dataRow_LBL_humidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="Humidity: 10/10/10"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!--Col 2-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/dataRow_IMG_temperature"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/hot" />
+
+                <TextView
+                    android:id="@+id/dataRow_LBL_temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="Temperature: 20C"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--Row 3-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--Col 1-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/dataRow_IMG_soil"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/soil" />
+
+                <TextView
+                    android:id="@+id/dataRow_LBL_soil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="Soil moisture: 40"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <!--Col 2-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/dataRow_IMG_light"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/sun" />
+
+                <TextView
+                    android:id="@+id/dataRow_LBL_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="Light exposure: 55"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--Row 4-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/dataRow_IMG_uv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/uv" />
+
+            <TextView
+                android:id="@+id/dataRow_LBL_uv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="UV exposure: 63"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

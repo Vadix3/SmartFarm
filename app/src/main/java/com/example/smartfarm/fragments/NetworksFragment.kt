@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.NETWORK_LIST
 import com.example.smartfarm.MyAppClass.Constants.TAG
@@ -21,17 +23,21 @@ import com.example.smartfarm.adapters.NetworkListAdapter
 import com.example.smartfarm.controllers.DataController
 import com.example.smartfarm.dialogs.FirstNetworkDialog
 import com.example.smartfarm.dialogs.NewNetworkDialog
-import com.example.smartfarm.interfaces.DeviceListCallback
+import com.example.smartfarm.interfaces.MultipleDataCallback
 import com.example.smartfarm.interfaces.NetworkListCallback
 import com.example.smartfarm.interfaces.NetworkCallback
 import com.example.smartfarm.interfaces.ResultListener
-import com.example.smartfarm.models.SmartFarmDevice
+import com.example.smartfarm.models.SmartFarmData
 import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.json.JSONObject
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class NetworksFragment(mContext: Context) : Fragment() {
 
@@ -41,6 +47,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
     private var networkList = arrayListOf<SmartFarmNetwork>()// list of network object
     private lateinit var createNetworkBtn: FloatingActionButton // fab to add networks
     private lateinit var networkRecycler: RecyclerView  // recyclerView of the networks
+    private lateinit var loadingImg: ShapeableImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,12 +73,14 @@ class NetworksFragment(mContext: Context) : Fragment() {
                 loadFromCloud()
             } else {
                 loadFromBundle()
+                loadingImg.visibility = ConstraintLayout.GONE
             }
         } else {
             loadDataFromSP()
         }
-        return mView;
+        return mView
     }
+
 
     /** This method will load the most latest data from SP */
     private fun loadDataFromSP() {
@@ -118,6 +127,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
                 if (result) {
                     networkList = networks!! // insert the fetched documents
                     updateNetworkList() // refresh the document list
+                    loadingImg.visibility = ConstraintLayout.GONE
                 } else {
                     if (networks == null) {
                         CodingTools.displayToast(
@@ -175,7 +185,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
     /** This method will take the network object and will upload it to the cloud*/
     private fun putNetworkToDb(network: SmartFarmNetwork) {
         Log.d(TAG, "putNetworkToDb: ")
-        dataController.insertDocument(
+        dataController.initNetwork(
             MyAppClass.Constants.DB_NAME,
             MyAppClass.Constants.NETWORKS_COLLECTION,
             network,
@@ -229,5 +239,13 @@ class NetworksFragment(mContext: Context) : Fragment() {
         createNetworkBtn.setOnClickListener {
             openNewNetworkDialog()
         }
+        loadingImg = mView.findViewById(R.id.networks_IMG_loading)
+        val circularProgressDrawable = CircularProgressDrawable(mContext)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+        loadingImg.setImageDrawable(circularProgressDrawable)
+        Log.d(TAG, "initViews: setting visible")
+        loadingImg.visibility = ConstraintLayout.VISIBLE
     }
 }

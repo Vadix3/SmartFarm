@@ -3,10 +3,14 @@ package com.example.smartfarm.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.example.smartfarm.MyAppClass.Constants.DATA_COLLECTION
+import com.example.smartfarm.MyAppClass.Constants.DB_NAME
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.R
 import com.example.smartfarm.interfaces.DocumentListListener
+import com.example.smartfarm.interfaces.MultipleDataCallback
 import com.example.smartfarm.interfaces.ResultListener
+import com.example.smartfarm.models.SmartFarmData
 import com.example.smartfarm.models.SmartFarmUser
 import io.realm.Realm
 import io.realm.mongodb.App
@@ -18,6 +22,11 @@ import io.realm.mongodb.mongo.MongoCollection
 import io.realm.mongodb.mongo.MongoDatabase
 import io.realm.mongodb.mongo.iterable.FindIterable
 import org.bson.Document
+import org.json.JSONObject
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 /** A singleton class that will handle the needed queries to the mongodb server*/
 
@@ -263,5 +272,116 @@ object MongoTools {
         }]
     }
 
+    fun getDocumentsByDayAndHours(
+        deviceId: String,
+        startDay: LocalDate,
+        endDay: LocalDate,
+        startTime: LocalTime,
+        endTime: LocalTime,
+        listener: MultipleDataCallback
+    ) {
+        Log.d(
+            TAG,
+            "getDocumentsByDayAndHours: startDay: $startDay endDay: $endDay startTime: $startTime endTime:$endTime"
+        )
+        val mongoClient: MongoClient =
+            user.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(DB_NAME)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(DATA_COLLECTION)!!
+        val cursor: FindIterable<Document> =
+            mongoCollection.find()
+        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.ENGLISH)
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ENGLISH)
+
+        val resultList = arrayListOf<SmartFarmData>()
+        cursor.iterator().getAsync { result ->
+            if (result != null) { // connection established
+                if (result.get() != null) {  // got results, return json of list
+                    while (result.get().hasNext()) {
+                        val item = result.get().next()
+                        val itemDate = item["date"] as String
+                        val itemTime = item["time"] as String
+                        val itemLocalDate = LocalDate.parse(itemDate, dateFormatter)
+                        val itemLocalTime = LocalTime.parse(itemTime, timeFormatter)
+                        if (item["device"] == deviceId) { // same device
+
+                            if (itemLocalDate.isEqual(startDay) || itemLocalDate.isEqual(endDay)) { // days match
+                                Log.d(TAG, "Got item: $item")
+
+                                // item from day before
+                                if (itemLocalDate.isEqual(startDay)) {
+                                    // if the item time is after the start and before the end of the day
+                                    if (itemLocalTime.isAfter(startTime) && itemLocalTime.isBefore(
+                                            LocalTime.parse("23:59:59.63")
+                                        )
+                                    ) {
+                                        //time match
+                                        resultList.add(ParsingTools.parseMeasurement(JSONObject(item.toJson())))
+                                    }
+                                }
+
+                                //Item from later day
+                                if (itemLocalDate.isEqual(endDay)) {
+                                    // item after start of later day and before end time
+                                    if (itemLocalTime.isAfter(LocalTime.parse("00:00:00.63")) && itemLocalTime.isBefore(
+                                            endTime
+                                        )
+                                    ) {
+                                        //time match
+                                        resultList.add(ParsingTools.parseMeasurement(JSONObject(item.toJson())))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    listener.getData(resultList)
+                } else {
+                    Log.d(TAG, "getDocumentsByDayInterval: Null result")
+                }
+            }
+        }
+    }
+
+
+    fun getDocumentsByDayInterval(
+        deviceId: String,
+        start: LocalDate,
+        end: LocalDate,
+        listener: MultipleDataCallback
+    ) {
+        Log.d(TAG, "getDocumentsByDayInterval: start: $start end: $end")
+        val mongoClient: MongoClient =
+            user.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(DB_NAME)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(DATA_COLLECTION)!!
+        val cursor: FindIterable<Document> =
+            mongoCollection.find()
+
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.ENGLISH)
+        val resultList = arrayListOf<SmartFarmData>()
+        cursor.iterator().getAsync { result ->
+            if (result != null) { // connection established
+                if (result.get() != null) {  // got results, return json of list
+                    while (result.get().hasNext()) {
+                        val item = result.get().next()
+                        val itemDate = item["date"] as String
+                        val itemLocalDate = LocalDate.parse(itemDate, formatter)
+                        if (item["device"] == deviceId) {
+                            if (itemLocalDate.isAfter(start) && itemLocalDate.isBefore(end)) {
+                                resultList.add(ParsingTools.parseMeasurement(JSONObject(item.toJson())))
+                            }
+                        }
+                    }
+                    listener.getData(resultList)
+                } else {
+                    Log.d(TAG, "getDocumentsByDayInterval: Null result")
+                }
+            }
+        }
+    }
 }
 
