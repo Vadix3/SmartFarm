@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+
+    <!--margin-->
+    <FrameLayout
+        android:layout_width="5dp"
+        android:layout_height="0dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/picker_BTN_dates"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:backgroundTint="@color/white"
+        android:maxLines="1"
+        android:text="@string/pick_dates"
+        android:textColor="@color/colorSecondary"
+        android:textSize="12sp"
+        app:icon="@drawable/calendar"
+        app:iconSize="20dp"
+        app:iconTint="@null"
+        app:strokeColor="@color/colorSecondary"
+        app:strokeWidth="2dp" />
+    <!--margin-->
+    <FrameLayout
+        android:layout_width="5dp"
+        android:layout_height="0dp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/picker_BTN_submit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="@color/colorSecondary"
+        android:maxLines="1"
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:iconSize="20dp"
+        app:iconTint="@null"
+        app:strokeColor="@color/colorSecondary"
+        app:strokeWidth="2dp" />
+
+    <!--margin-->
+    <FrameLayout
+        android:layout_width="5dp"
+        android:layout_height="0dp" />
+
+<!--    &lt;!&ndash;margin&ndash;&gt;-->
+<!--    <FrameLayout-->
+<!--        android:layout_width="5dp"-->
+<!--        android:layout_height="0dp" />-->
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/picker_BTN_dateEnd"-->
+<!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_weight="1"-->
+<!--        android:autoSizeTextType="none"-->
+<!--        android:backgroundTint="@color/white"-->
+<!--        android:maxLines="1"-->
+<!--        android:text="@string/to"-->
+<!--        android:textColor="@color/colorSecondary"-->
+<!--        android:textSize="12sp"-->
+<!--        app:icon="@drawable/calendar"-->
+<!--        app:iconSize="20dp"-->
+<!--        app:iconTint="@null"-->
+<!--        app:strokeColor="@color/colorSecondary"-->
+<!--        app:strokeWidth="2dp" />-->
+<!--    &lt;!&ndash;margin&ndash;&gt;-->
+<!--    <FrameLayout-->
+<!--        android:layout_width="5dp"-->
+<!--        android:layout_height="0dp" />-->
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/picker_BTN_timeStart"-->
+<!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        -->
+<!--        android:layout_weight="1"-->
+<!--        android:backgroundTint="@color/white"-->
+<!--        android:maxLines="1"-->
+<!--        android:text="@string/from"-->
+<!--        android:textColor="@color/colorSecondary"-->
+<!--        android:textSize="12sp"-->
+<!--        app:icon="@drawable/clock"-->
+<!--        app:iconSize="20dp"-->
+<!--        app:iconTint="@null"-->
+<!--        app:strokeColor="@color/colorSecondary"-->
+<!--        app:strokeWidth="2dp" />-->
+<!--    &lt;!&ndash;margin&ndash;&gt;-->
+<!--    <FrameLayout-->
+<!--        android:layout_width="5dp"-->
+<!--        android:layout_height="0dp" />-->
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/picker_BTN_timeEnd"-->
+<!--        style="@style/Widget.MaterialComponents.Button.TextButton"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_weight="1"-->
+<!--        android:autoSizeTextType="none"-->
+<!--        android:backgroundTint="@color/white"-->
+<!--        android:maxLines="1"-->
+<!--        android:text="@string/to"-->
+<!--        android:textColor="@color/colorSecondary"-->
+<!--        android:textSize="12sp"-->
+<!--        app:icon="@drawable/clock"-->
+<!--        app:iconSize="20dp"-->
+<!--        app:iconTint="@null"-->
+<!--        app:strokeColor="@color/colorSecondary"-->
+<!--        app:strokeWidth="2dp" />-->
+<!--    &lt;!&ndash;margin&ndash;&gt;-->
+<!--    <FrameLayout-->
+<!--        android:layout_width="5dp"-->
+<!--        android:layout_height="0dp" />-->
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,10 +1,12 @@
 package com.example.smartfarm.activities
 
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.Pair
 import androidx.core.view.isVisible
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.TAG
@@ -17,6 +19,13 @@ import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.datepicker.MaterialDatePicker
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.Month
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,8 +52,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        testMethod()
         initViews()
         initLoginSequence()
+    }
+
+    private fun testMethod() {
+
+
     }
 
 
@@ -109,13 +124,6 @@ class MainActivity : AppCompatActivity() {
                     if (item.itemId != navBar.selectedItemId) { // if the item is not already selected check
                         Log.d(TAG, "bar listener: networks click")
                         setNetworksFragmentUI()
-                    }
-                    false
-                }
-                R.id.bottom_menu_settings -> {
-                    if (item.itemId != navBar.selectedItemId) { // if the item is not already selected check
-                        Log.d(TAG, "bar listener: settings")
-                        setSettingsFragmentUI()
                     }
                     false
                 }

@@ -10,9 +10,4 @@
         android:enabled="true"
         android:icon="@drawable/ic_baseline_network_on_24"
         android:title="@string/networks" />
-    <item
-        android:id="@+id/bottom_menu_settings"
-        android:enabled="true"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:title="@string/settings" />
 </menu>

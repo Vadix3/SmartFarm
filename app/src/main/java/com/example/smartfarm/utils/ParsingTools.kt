@@ -11,6 +11,7 @@ import com.example.smartfarm.models.*
 import org.bson.Document
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Exception
 
 object ParsingTools {
     fun parseMeasurement(plainJson: JSONObject): SmartFarmData {
@@ -18,11 +19,36 @@ object ParsingTools {
         val data = SmartFarmData()
         data.date = plainJson.get("date") as String
         data.time = plainJson.get("time") as String
-        data.humidity = plainJson.get("humidity") as Double
-        data.temperature = plainJson.get("temperature") as Double
-        data.soil = plainJson.get("soil") as Int
-        data.light = plainJson.get("light") as Int
-        data.uv = plainJson.get("uv") as Int
+        try {
+            data.humidity = plainJson.get("humidity") as Double
+        } catch (e: Exception) {
+            data.humidity = -999.0
+        }
+        try {
+            data.temperature = plainJson.get("temperature") as Double
+        } catch (e: Exception) {
+            data.temperature = -999.0
+        }
+        try {
+            data.soil = plainJson.get("soil") as Int
+        } catch (e: Exception) {
+            data.soil = -999
+        }
+        try {
+            data.light = plainJson.get("light") as Int
+        } catch (e: Exception) {
+            data.light = -999
+        }
+        try {
+            data.uv = plainJson.get("uv") as Int
+        } catch (e: Exception) {
+            data.uv = -999
+        }
+        try {
+            data.uv = plainJson.get("uv") as Int
+        } catch (e: Exception) {
+            data.uv = -999
+        }
         data.device = plainJson.get("device") as String
         return data
     }

@@ -74,7 +74,7 @@
       "id": "8",
       "name": "Tomato",
       "tips": {
-        "sun": "Partial",
+        "sun": "Full or partial",
         "water": "Moderate+",
         "min_temp": 14,
         "max_temp": 16

@@ -34,6 +34,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.models.ProduceRow
 import com.example.smartfarm.models.SmartFarmDevice
 
@@ -162,7 +163,6 @@ object CodingTools {
         temp.name = device.name
         return temp
     }
-
 
 
     fun getWeatherAPIKey(context: Context): String {

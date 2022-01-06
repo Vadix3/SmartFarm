@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.CAMERA_PERMISSION
 import com.example.smartfarm.MyAppClass.Constants.TAG
@@ -26,6 +28,7 @@ import com.example.smartfarm.models.SmartFarmDevice
 import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -44,6 +47,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
     private lateinit var addDeviceBtn: FloatingActionButton // fab to add devices
     private lateinit var deviceRecycler: RecyclerView  // recyclerView of the devices
     private lateinit var noDevicesText: MaterialTextView
+    private lateinit var loadingImg: ShapeableImageView
 
     /** Permission listener result handler*/
     private val requestPermissionLauncher =
@@ -217,6 +221,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
                         Log.d(TAG, "getDevices: devices empty")
                         noDevicesText.visibility = View.VISIBLE
                     }
+                    loadingImg.visibility = ConstraintLayout.GONE
                     updateDevicesList() // refresh the document list
                 } else {
                     CodingTools.displayToast(mContext, "Error fetching devices", Toast.LENGTH_SHORT)
@@ -228,6 +233,7 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
     /** This method will refresh the devices list after update / init*/
     private fun updateDevicesList() {
         Log.d(TAG, "updateDevicesList: ")
+
         val adapter = DeviceListAdapter(
             requireContext(),
             deviceList,
@@ -286,6 +292,14 @@ class NetworkDetailsFragment(mContext: Context, network: SmartFarmNetwork) : Fra
         }
         deviceRecycler = mView.findViewById(R.id.networkDetails_LST_networkList)
         noDevicesText = mView.findViewById(R.id.networkDetails_LBL_noDevices)
+        loadingImg = mView.findViewById(R.id.networkDetails_IMG_loading)
+        val circularProgressDrawable = CircularProgressDrawable(mContext)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+        loadingImg.setImageDrawable(circularProgressDrawable)
+        Log.d(TAG, "initViews: setting visible")
+        loadingImg.visibility = ConstraintLayout.VISIBLE
     }
 
     private fun openAddDeviceDialog() {

@@ -8,12 +8,11 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_bottom_navigation"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:visibility="gone"
-        app:backgroundTint="@color/colorPrimary"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,11 +49,11 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
 
-<!--        <com.miguelcatalan.materialsearchview.MaterialSearchView-->
-<!--            android:id="@+id/main_SRC_search"-->
-<!--            style="@style/MaterialSearchViewStyle"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"/>-->
+        <!--        <com.miguelcatalan.materialsearchview.MaterialSearchView-->
+        <!--            android:id="@+id/main_SRC_search"-->
+        <!--            style="@style/MaterialSearchViewStyle"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"/>-->
 
     </FrameLayout>
 

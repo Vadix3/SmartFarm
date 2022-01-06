@@ -33,6 +33,13 @@ class MyAppClass : Application() {
         const val CHANGE_DURATION_COMMAND = 0
 
 
+        // hourly, daily, weekly, monthly, yearly, date_interval
+
+        const val HOURLY = 0
+        const val DAILY = 1
+        const val INTERVAL = 2
+
+
         const val INTERVAL_COMMAND = 0
         const val SWITCH_COMMAND = 1
         const val MEASURE_NOW_COMMAND = 2
@@ -45,6 +52,9 @@ class MyAppClass : Application() {
         const val SOIL_MOISTURE = 0
         const val LIGHT_EXPOSURE = 2
         const val UV_EXPOSURE = 3
+        const val DATE = 5
+        const val TIME = 6
+
 
 
         /**
@@ -67,6 +77,7 @@ class MyAppClass : Application() {
         const val SOAKED = "Soaked"
         const val FULL_OR_PARTIAL_SUN = "Full or partial"
         const val PARTIAL_OR_SHADE_SUN = "Partial or shade"
+        const val PARTIAL = "Partial"
         const val FULL_SUN = "Full"
         const val SHADE_OR_NO_SUN = "Shade or no sun"
 

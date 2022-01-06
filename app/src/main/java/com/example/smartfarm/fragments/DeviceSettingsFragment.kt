@@ -72,7 +72,12 @@ class DeviceSettingsFragment(mContext: Context, device: SmartFarmDevice, listene
 
         measurementTitle = mView.findViewById(R.id.deviceSettings_ILBL_measurementTitle)
         measurementTitle.text =
-            "${getString(R.string.measure_interval)}:${copyDevice.measure_interval}h"
+            "${getString(R.string.measure_interval)}:${
+                String.format(
+                    "%.0f",
+                    copyDevice.measure_interval
+                )
+            }m"
         statusInfo = mView.findViewById(R.id.deviceSettings_IMG_statusInfo)
         statusInfo.setOnClickListener {
             CodingTools.displayInfoDialog(mContext, mContext.getString(R.string.status_info))
@@ -106,21 +111,31 @@ class DeviceSettingsFragment(mContext: Context, device: SmartFarmDevice, listene
         produceList = mView.findViewById(R.id.deviceSettings_LAY_cropTypeText)
         initProduceList()
         intervalSlider = mView.findViewById(R.id.deviceSettings_LAY_intervalSlider)
-        intervalSlider.value = device.measure_interval.toFloat()
+
+        if (device.measure_interval.toFloat() != 1f) {
+            intervalSlider.value = device.measure_interval.toFloat()
+        } else {
+            intervalSlider.value = 0f
+        }
         intervalSlider.setLabelFormatter { value: Float ->
             val format = NumberFormat.getNumberInstance()
             format.format(value.toDouble())
         }
 
+        // 1-5-10-15-30-60-90-2-4-6-8-10-12-24
+
         intervalSlider.addOnChangeListener { rangeSlider, value, fromUser ->
             // value = time in hours
             // time in minutes = value * 60
-            var text = ""
-            text = if (value < 1) { // minutes
-                "${getString(R.string.measure_interval)}:${String.format("%.0f", value * 60)}m"
-            } else {
-                "${getString(R.string.measure_interval)}:${String.format("%.2f", value)}h"
+            var temp = value
+            if (temp.equals(0f)) {
+                temp = 1f
             }
+            var text = ""
+            text =  // minutes
+                "${getString(R.string.measure_interval)}:${String.format("%.0f", temp)}m"
+
+
             measurementTitle.text = text
         }
 
@@ -146,7 +161,12 @@ class DeviceSettingsFragment(mContext: Context, device: SmartFarmDevice, listene
 
         copyDevice.name = nameEdt.text.toString()
         copyDevice.description = descriptionEdt.text.toString()
-        copyDevice.measure_interval = intervalSlider.value.toDouble()
+
+        if (intervalSlider.value.toDouble() == 0.0) {
+            copyDevice.measure_interval = 1.0
+        } else {
+            copyDevice.measure_interval = intervalSlider.value.toDouble()
+        }
 
 
         // Send the device back to caller

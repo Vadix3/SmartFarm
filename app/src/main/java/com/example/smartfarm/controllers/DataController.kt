@@ -15,7 +15,8 @@ import com.example.smartfarm.utils.ParsingTools
 import org.bson.Document
 import org.bson.types.ObjectId
 import org.json.JSONObject
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
 import kotlin.collections.ArrayList
 
 /** The class will perform the needed actions to get the data from the server*/
@@ -25,8 +26,7 @@ class DataController(context: Context) {
     private var tools = MongoTools
 
     /**
-     * This method will fetch the latest entry in the specified collection and will return it
-     * in JSON form to the caller
+     * This method will fetch the latest entry for the given device, and return it to the user.
      */
     fun getLastEntry(device: String, listener: MeasurementCallback) {
         val query = Document("device", device)
@@ -93,7 +93,7 @@ class DataController(context: Context) {
 
 
     /** This function will send a document to MongoTools that will insert it to the cloud*/
-    fun insertDocument(
+    fun initNetwork(
         database: String,
         collection: String,
         network: SmartFarmNetwork,
@@ -225,5 +225,41 @@ class DataController(context: Context) {
                 }
             }
         }, Document("fullDocument.device", did))
+    }
+
+    /**
+     * This method will get 2 dates, 2 times and a listener, and will return to the listener a
+     * list of data objects for the given date and time
+     */
+    fun getDataByDateAndTime(
+        deviceId: String,
+        start: LocalDate,
+        end: LocalDate,
+        sTime: LocalTime,
+        eTime: LocalTime,
+        listener: MultipleDataCallback
+    ) {
+        Log.d(TAG, "getDataByRange: Controller: start:$start end:$end")
+        MongoTools.getDocumentsByDayAndHours(deviceId, start, end, sTime, eTime, listener)
+    }
+
+
+    /**
+     * This method will get 2 dates and a listener, and will return to the listener a
+     * list of data objects for the given date
+     */
+    fun getDataByDate(
+        deviceId: String,
+        start: LocalDate,
+        end: LocalDate,
+        listener: MultipleDataCallback
+    ) {
+        Log.d(TAG, "getDataByRange: Controller: start:$start end:$end")
+        MongoTools.getDocumentsByDayInterval(
+            deviceId,
+            start.minusDays(1),
+            end.plusDays(1),
+            listener
+        )
     }
 }

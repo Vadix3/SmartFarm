@@ -2,22 +2,29 @@ package com.example.smartfarm.fragments
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.load.data.DataFetcher
 import com.example.smartfarm.MyAppClass
+import com.example.smartfarm.MyAppClass.Constants.DATE
 import com.example.smartfarm.MyAppClass.Constants.HUMIDITY
 import com.example.smartfarm.MyAppClass.Constants.LIGHT_EXPOSURE
 import com.example.smartfarm.MyAppClass.Constants.SOIL_MOISTURE
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.MyAppClass.Constants.TEMPERATURE
+import com.example.smartfarm.MyAppClass.Constants.TIME
 import com.example.smartfarm.MyAppClass.Constants.UV_EXPOSURE
 import com.example.smartfarm.MyAppClass.Constants.WRAP_CONTENT
 import com.example.smartfarm.R
@@ -36,6 +43,7 @@ import com.example.smartfarm.utils.ParsingTools
 import com.example.smartfarm.utils.ProduceTools
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -65,32 +73,22 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
     // A list of tips objects
     private lateinit var growingTips: ArrayList<ProduceTip>
 
-    // Textviews - date, time, humidity, temp, soil, light, uv, title
-    private lateinit var dateLbl: TextView
-    private lateinit var timeLbl: TextView
-    private lateinit var humidityLbl: TextView
-    private lateinit var tempLbl: TextView
-    private lateinit var soilLbl: TextView
-    private lateinit var lightLbl: TextView
-    private lateinit var uvLbl: TextView
-    private lateinit var titleLbl: TextView
+    /** A list of fragments for the data
+     * 7 fragments:
+     * SOIL_MOISTURE = 0
+     * TEMPERATURE = 1
+     * LIGHT_EXPOSURE = 2
+     * UV_EXPOSURE = 3
+     * HUMIDITY = 4
+     * DATE = 5
+     * TIME = 6
+     */
+    private var fragmentsList = arrayListOf<FragmentDataCard>()
 
-    // Icons
-    private lateinit var dateImg: ShapeableImageView
-    private lateinit var timeImg: ShapeableImageView
-    private lateinit var humidityImg: ShapeableImageView
-    private lateinit var tempImg: ShapeableImageView
-    private lateinit var soilImg: ShapeableImageView
-    private lateinit var lightImg: ShapeableImageView
-    private lateinit var uvImg: ShapeableImageView
-    private lateinit var titleImg: ShapeableImageView
-
-    private lateinit var humidityInfo: ShapeableImageView
-    private lateinit var temperatureInfo: ShapeableImageView
-    private lateinit var soilInfo: ShapeableImageView
-    private lateinit var lightInfo: ShapeableImageView
-    private lateinit var uvInfo: ShapeableImageView
     private lateinit var readNewDataBtn: MaterialButton
+    private lateinit var titleLbl: MaterialTextView
+    private lateinit var swipeLayout: SwipeRefreshLayout
+    private lateinit var loadingImg: ShapeableImageView
 
 
     override fun onCreateView(
@@ -162,6 +160,7 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
      *
      * */
     private fun openRecommendations(key: Int) {
+        Log.d(TAG, "openRecommendations: opening recommendations for: $key")
         var thisTip = ProduceTip()
 
         when (key) { // determine which tip is it
@@ -192,7 +191,13 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
 
     private fun initViews(mView: View) {
         Log.d(TAG, "initViews: ")
-
+        swipeLayout = mView.findViewById(R.id.data_LAY_swipeLayout)
+        swipeLayout.setOnRefreshListener {
+            Log.d(TAG, "onRefresh: ")
+            swipeLayout.isRefreshing = true
+            readFreshData()
+        }
+        titleLbl = mView.findViewById(R.id.data_LBL_title)
         readNewDataBtn = mView.findViewById(R.id.data_BTN_readNewData)
         readNewDataBtn.setOnClickListener { readFreshData() }
         settingsIcon = mView.findViewById(R.id.data_IMG_settings)
@@ -204,36 +209,15 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
             openStats()
         }
 
-        //labels
-        dateLbl = mView.findViewById(R.id.data_LBL_date)
-        timeLbl = mView.findViewById(R.id.data_LBL_time)
-        humidityLbl = mView.findViewById(R.id.data_LBL_humidity)
-        tempLbl = mView.findViewById(R.id.data_LBL_temperature)
-        soilLbl = mView.findViewById(R.id.data_LBL_soil)
-        lightLbl = mView.findViewById(R.id.data_LBL_light)
-        uvLbl = mView.findViewById(R.id.data_LBL_uv)
-        titleLbl = mView.findViewById(R.id.data_LBL_title)
+        loadingImg = mView.findViewById(R.id.data_IMG_loading)
+        val circularProgressDrawable = CircularProgressDrawable(mContext)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+        loadingImg.setImageDrawable(circularProgressDrawable)
+        Log.d(TAG, "initViews: setting visible")
+        loadingImg.visibility = ConstraintLayout.VISIBLE
 
-        //images
-        dateImg = mView.findViewById(R.id.data_IMG_date)
-        timeImg = mView.findViewById(R.id.data_IMG_time)
-        humidityImg = mView.findViewById(R.id.data_IMG_humidity)
-        tempImg = mView.findViewById(R.id.data_IMG_temperature)
-        soilImg = mView.findViewById(R.id.data_IMG_soil)
-        lightImg = mView.findViewById(R.id.data_IMG_light)
-        uvImg = mView.findViewById(R.id.data_IMG_uv)
-
-        humidityInfo = mView.findViewById(R.id.data_IMG_humidityInfo)
-        humidityInfo.setOnClickListener { openRecommendations(HUMIDITY) }
-        // Display a yellow icon if there is any attention needed
-        temperatureInfo = mView.findViewById(R.id.data_IMG_temperatureInfo)
-        temperatureInfo.setOnClickListener { openRecommendations(TEMPERATURE) }
-        soilInfo = mView.findViewById(R.id.data_IMG_soilMoistureInfo)
-        soilInfo.setOnClickListener { openRecommendations(SOIL_MOISTURE) }
-        lightInfo = mView.findViewById(R.id.data_IMG_lightInfo)
-        lightInfo.setOnClickListener { openRecommendations(LIGHT_EXPOSURE) }
-        uvInfo = mView.findViewById(R.id.data_IMG_uvInfo)
-        uvInfo.setOnClickListener { openRecommendations(UV_EXPOSURE) }
         updatePageUI()
     }
 
@@ -260,6 +244,7 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
             override fun result(result: Boolean, message: String) {
                 if (result) {
                     Log.d(TAG, "result: SUCCESS: $message")
+                    swipeLayout.isRefreshing = false
                 } else {
                     Log.d(TAG, "result: ERROR: $message")
                     CodingTools.displayErrorDialog(mContext, "Error: $message")
@@ -274,53 +259,254 @@ class DataFragment(mContext: Context, data: SmartFarmData, device: SmartFarmDevi
     private fun updatePageUI() {
         Log.d(TAG, "updatePageUI: ")
         checkRecommendations()
+        loadingImg.visibility = ConstraintLayout.GONE
         readNewDataBtn.text = getText(R.string.read_new_data)
         readNewDataBtn.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
         readNewDataBtn.isActivated = true
 
-        if (growingTips[HUMIDITY].alert) {
-            humidityInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
-        } else {
-            humidityInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+
+        /** A list of fragments for the data
+         * 7 fragments:
+         * SOIL_MOISTURE = 0
+         * TEMPERATURE = 1
+         * LIGHT_EXPOSURE = 2
+         * UV_EXPOSURE = 3
+         * HUMIDITY = 4
+         * DATE = 5
+         * TIME = 6
+         */
+
+        val tempList = arrayListOf<FragmentDataCard>()
+
+        // ==============================  Soil 0  ================================
+
+        var soilText = ""
+        val soilCard = FragmentDataCard(
+            mContext,
+            SOIL_MOISTURE,
+            R.drawable.soil,
+            soilText,
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        openRecommendations(message.toInt())
+                    }
+                }
+            }) // 0
+
+        if (growingTips[SOIL_MOISTURE].alert) { // check alert
+            soilCard.warning = true
         }
-        if (growingTips[UV_EXPOSURE].alert) {
-            uvInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+
+        if (data.soil != -999) {
+            soilText = resources.getString(R.string.soil_moisture) + ": " + data.soil.toString()
         } else {
-            uvInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+            soilText = resources.getString(R.string.no_data)
         }
-        if (growingTips[TEMPERATURE].alert) {
-            temperatureInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        soilCard.message = soilText
+
+        CodingTools.switchFragment(childFragmentManager, R.id.data_LAY_soil, soilCard, false, "")
+
+        // =========================================================================
+
+
+        // ============================  Temperature 1 ================================
+
+        var temperatureText = "" // *
+        val temperatureCard = FragmentDataCard( // *
+            mContext,
+            TEMPERATURE,// *
+            R.drawable.hot,// *
+            temperatureText,// *
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        openRecommendations(message.toInt())
+                    }
+                }
+            }) // 0
+
+        if (growingTips[TEMPERATURE].alert) { // check alert  // *
+            temperatureCard.warning = true // *
+        }
+
+        if (data.temperature != -999.0) { // *
+            temperatureText =
+                resources.getString(R.string.temperature) + ": " + data.temperature.roundToInt() + "°C" // *
         } else {
-            temperatureInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+            temperatureText = resources.getString(R.string.no_data) // *
         }
-        if (growingTips[SOIL_MOISTURE].alert) {
-            soilInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        temperatureCard.message = temperatureText // *
+        CodingTools.switchFragment(
+            childFragmentManager,
+            R.id.data_LAY_temperature,
+            temperatureCard,
+            false,
+            ""
+        )
+
+        // =========================================================================
+
+
+        // ============================  Light 2 ================================
+
+        var lightText = "" // *
+        val lightCard = FragmentDataCard( // *
+            mContext,
+            LIGHT_EXPOSURE,// *
+            R.drawable.sun,// *
+            lightText,// *
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        openRecommendations(message.toInt())
+                    }
+                }
+            }) // 0
+
+        if (growingTips[LIGHT_EXPOSURE].alert) { // check alert  // *
+            lightCard.warning = true // *
+        }
+
+        if (data.light != -999) { // *
+            lightText =
+                resources.getString(R.string.light_exposure) + ": " + data.light.toString() // *
         } else {
-            soilInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+            lightText = resources.getString(R.string.no_data) // *
         }
-        if (growingTips[LIGHT_EXPOSURE].alert) {
-            lightInfo.setBackgroundResource(R.drawable.ic_baseline_info_24_red)
+        lightCard.message = lightText // *
+        CodingTools.switchFragment(childFragmentManager, R.id.data_LAY_light, lightCard, false, "")
+
+        // =========================================================================
+
+        // ============================  UV 3 ================================
+
+        var uvText = "" // *
+        val uvCard = FragmentDataCard( // *
+            mContext,
+            UV_EXPOSURE,// *
+            R.drawable.uv,// *
+            uvText,// *
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        openRecommendations(message.toInt())
+                    }
+                }
+            }) // 0
+
+        if (growingTips[UV_EXPOSURE].alert) { // check alert  // *
+            uvCard.warning = true // *
+        }
+
+        if (data.uv != -999) { // *
+            uvText = resources.getString(R.string.uv_exposure) + ": " + data.uv.toString() // *
         } else {
-            lightInfo.setBackgroundResource(R.drawable.ic_baseline_info_24)
+            uvText = resources.getString(R.string.no_data) // *
         }
-        //inject values
-        dateLbl.text = resources.getString(R.string.date) + ": " + data.date
-        timeLbl.text = resources.getString(R.string.time) + ": " + data.time
-        humidityLbl.text =
-            resources.getString(R.string.humidity) + ": " + data.humidity.roundToInt() + "%"
-        tempLbl.text =
-            resources.getString(R.string.temperature) + ": " + data.temperature.roundToInt() + "°C"
-        soilLbl.text = resources.getString(R.string.soil_moisture) + ": " + data.soil.toString()
-        lightLbl.text = resources.getString(R.string.light_exposure) + ": " + data.light.toString()
-        uvLbl.text = resources.getString(R.string.uv_exposure) + ": " + data.uv.toString()
+        uvCard.message = uvText // *
+        CodingTools.switchFragment(childFragmentManager, R.id.data_LAY_uv, uvCard, false, "")
+
+        // =========================================================================
+
+
+        // ============================  Humidity 4 ================================
+
+        var humidityText = "" // *
+        val humidityCard = FragmentDataCard( // *
+            mContext,
+            HUMIDITY,// *
+            R.drawable.humidity,// *
+            humidityText,// *
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        Log.d(TAG, "result: humidity click")
+                    }
+                }
+            }) // 0
+
+        if (growingTips[HUMIDITY].alert) { // check alert  // *
+            humidityCard.warning = true // *
+        }
+
+        if (data.humidity != -999.0) { // *
+            humidityText =
+                resources.getString(R.string.humidity) + ": " + data.humidity.roundToInt() + "%" // *
+        } else {
+            humidityText = resources.getString(R.string.no_data) // *
+        }
+        humidityCard.message = humidityText // *
+        CodingTools.switchFragment(
+            childFragmentManager,
+            R.id.data_LAY_humidity,
+            humidityCard,
+            false,
+            ""
+        )
+
+        // =========================================================================
+
+
+        // ============================  Date 5 ================================
+
+        var dateText = resources.getString(R.string.date) + ": " + data.date // *
+
+        val dateCard = FragmentDataCard( // *
+            mContext,
+            DATE,// *
+            R.drawable.calendar,// *
+            dateText,// *
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        Log.d(TAG, "result: Date click")
+                    }
+                }
+            })
+        CodingTools.switchFragment(childFragmentManager, R.id.data_LAY_date, dateCard, false, "")
+
+        // =========================================================================
+
+
+        // ============================  Time 6 ================================
+
+        var timeText = resources.getString(R.string.time) + ": " + data.time
+
+        val timeCard = FragmentDataCard( // *
+            mContext,
+            TIME,// *
+            R.drawable.clock,// *
+            timeText,// *
+            false,
+            object : ResultListener {
+                override fun result(result: Boolean, message: String) {
+                    if (result) {
+                        Log.d(TAG, "result: time click")
+                    }
+                }
+            })
+
+        CodingTools.switchFragment(childFragmentManager, R.id.data_LAY_time, timeCard, false, "")
+
+        // =========================================================================
+
+        fragmentsList = tempList
         titleLbl.text = device.name
+        swipeLayout.isRefreshing = false
     }
 
 
     /** This method will open the statistics page for the selected device*/
     private fun openStats() {
         Log.d(TAG, "openStats: ")
-        val statsFragment = StatsFragment(mContext)
+        val statsFragment = StatsFragment(mContext, device.did, dataController)
         CodingTools.switchFragment(
             parentFragmentManager,
             R.id.main_LAY_mainFrame,
