@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.smartfarm">
+
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Always include this permission -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
 
     <application
@@ -15,6 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFarm">
+
+        <provider
+            android:name=".utils.CachedFileProvider"
+            android:authorities="com.example.smartfarm.provider"
+            android:grantUriPermissions="true"></provider>
+
         <activity
             android:name=".activities.MainActivity"
             android:exported="true">
@@ -25,10 +34,21 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name = "weatherKey"
-            android:value = "${WEATHER_API_KEY}"/>
 
+        <meta-data
+            android:name="weatherKey"
+            android:value="${WEATHER_API_KEY}" />
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path" />
+        </provider>
     </application>
 
 </manifest>

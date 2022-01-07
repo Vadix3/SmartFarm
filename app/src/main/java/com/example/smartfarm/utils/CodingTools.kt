@@ -34,6 +34,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.smartfarm.MyAppClass.Constants.STORAGE_PERMISSION
 import com.example.smartfarm.activities.MainActivity
 import com.example.smartfarm.models.ProduceRow
 import com.example.smartfarm.models.SmartFarmDevice
@@ -153,7 +154,7 @@ object CodingTools {
     /** Since the given object in the fragment is given by reference, we will clone
      * the device to compare it to the original one and determine if any changes were made
      */
-    fun cloneDevice(device:SmartFarmDevice): SmartFarmDevice {
+    fun cloneDevice(device: SmartFarmDevice): SmartFarmDevice {
         val temp = SmartFarmDevice()
         temp.did = device.did
         temp.active = device.active
@@ -213,6 +214,9 @@ object CodingTools {
             }
             LOCATION_PERMISSION -> {
                 permissionCode = Manifest.permission.ACCESS_COARSE_LOCATION
+            }
+            STORAGE_PERMISSION -> {
+                permissionCode = Manifest.permission.WRITE_EXTERNAL_STORAGE
             }
         }
         when {

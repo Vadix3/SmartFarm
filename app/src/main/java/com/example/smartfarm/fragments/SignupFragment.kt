@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.smartfarm.MyAppClass
+import com.example.smartfarm.MyAppClass.Constants.DB_NAME
 import com.example.smartfarm.MyAppClass.Constants.TAG
+import com.example.smartfarm.MyAppClass.Constants.USER_DATA_COLLECTION
 import com.example.smartfarm.R
 import com.example.smartfarm.controllers.UserController
 import com.example.smartfarm.interfaces.LoginListener
 import com.example.smartfarm.interfaces.ResultListener
 import com.example.smartfarm.models.SmartFarmUser
 import com.example.smartfarm.utils.CodingTools
+import com.example.smartfarm.utils.MongoTools
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -86,6 +89,17 @@ class SignupFragment(mContext: Context,loginListener:LoginListener) : Fragment()
                     UserController(mContext).loginUser(temp.email,temp.password,object:ResultListener{
                         override fun result(result: Boolean, message: String) {
                             if(result){
+                                MongoTools.createUserCustomData(DB_NAME, USER_DATA_COLLECTION,object:ResultListener{
+                                    override fun result(result: Boolean, message: String) {
+                                        if(result){
+                                            //TODO: Do this
+                                            Log.d(TAG, "result: saved data successfully")
+                                        }else{
+                                            Log.d(TAG, "result: data wasnt saved")
+                                        }
+                                    }
+
+                                },"name",temp.name)
                                 loginListener.moveToMain(temp.email)
                             }else{
                                 CodingTools.displayToast(mContext,"Error: $message",Toast.LENGTH_SHORT)

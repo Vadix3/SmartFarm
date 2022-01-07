@@ -5,6 +5,8 @@ import android.util.Log
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.DATA_COLLECTION
 import com.example.smartfarm.MyAppClass.Constants.DB_NAME
+import com.example.smartfarm.MyAppClass.Constants.DEVICES_COLLECTION
+import com.example.smartfarm.MyAppClass.Constants.NETWORKS_COLLECTION
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.interfaces.*
 import com.example.smartfarm.models.CommandModel
@@ -227,6 +229,30 @@ class DataController(context: Context) {
         }, Document("fullDocument.device", did))
     }
 
+    /** This item will fetch all the devices of the user
+     * TODO: Maybe a username will be needed at some point
+     */
+    fun fetchAllDevicesOfUser(listener: DeviceListCallback) {
+        Log.d(TAG, "fetAllDevicesOfUser: Controller")
+        MongoTools.fetchAllDocuments(
+            DB_NAME,
+            DEVICES_COLLECTION,
+            object : DocumentListListener {
+                override fun getDocuments(result: Boolean, list: ArrayList<Document>?) {
+                    if (result) {
+                        val deviceList = arrayListOf<SmartFarmDevice>()
+                        for (item in list!!) {
+                            deviceList.add(ParsingTools.parseDevice(item))
+                        }
+                        listener.getDevices(true, deviceList)
+                    } else {
+                        listener.getDevices(false, arrayListOf<SmartFarmDevice>())
+                    }
+                }
+
+            })
+    }
+
     /**
      * This method will get 2 dates, 2 times and a listener, and will return to the listener a
      * list of data objects for the given date and time
@@ -261,5 +287,27 @@ class DataController(context: Context) {
             end.plusDays(1),
             listener
         )
+    }
+
+    /** This method will fetch all the networks of the user*/
+    fun fetchAllNetworksOfUser(listener: NetworkListCallback) {
+        Log.d(TAG, "fetchAllNetworksOfUser: ")
+        MongoTools.fetchAllDocuments(
+            DB_NAME,
+            NETWORKS_COLLECTION,
+            object : DocumentListListener {
+                override fun getDocuments(result: Boolean, list: ArrayList<Document>?) {
+                    if (result) {
+                        val networkList = arrayListOf<SmartFarmNetwork>()
+                        for (item in list!!) {
+                            networkList.add(ParsingTools.parseNetwork(item))
+                        }
+                        listener.getNetworks(true, networkList)
+                    } else {
+                        listener.getNetworks(false, arrayListOf<SmartFarmNetwork>())
+                    }
+                }
+
+            })
     }
 }

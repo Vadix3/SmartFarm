@@ -1,17 +1,20 @@
 package com.example.smartfarm.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.airbnb.lottie.LottieAnimationView
 import com.example.smartfarm.MyAppClass.Constants.DAILY
 import com.example.smartfarm.MyAppClass.Constants.HOURLY
 import com.example.smartfarm.MyAppClass.Constants.INTERVAL
@@ -25,15 +28,28 @@ import com.example.smartfarm.models.SmartFarmData
 import com.example.smartfarm.utils.CodingTools
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
+import java.io.File
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.smartfarm.MyAppClass.Constants.STORAGE_PERMISSION
+import com.example.smartfarm.utils.ParsingTools
+
+import java.time.*
+import android.app.Activity
+import android.net.Uri
+
+import androidx.activity.result.ActivityResultCallback
+
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import com.example.smartfarm.utils.CachedFileProvider
+import java.io.BufferedWriter
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.lang.Exception
 
 
 /** This is a fragment that shows historic measured data according to the criteria.
@@ -64,12 +80,70 @@ class HistoricDataFragment(
 
     private lateinit var dataRecycler: RecyclerView
     private lateinit var emptyLbl: MaterialTextView
-    private lateinit var loadingImage: ShapeableImageView
+    private lateinit var loadingImage: LottieAnimationView
     private var dataList = arrayListOf<SmartFarmData>()
 
     private lateinit var fabMenu: FloatingActionMenu
     private lateinit var fabItemSave: FloatingActionButton
     private lateinit var fabItemShare: FloatingActionButton
+    private lateinit var fabItemChart: FloatingActionButton
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                saveFileToDevice()
+            } else {
+                Log.d(TAG, "Denied")
+                CodingTools.displayErrorDialog(
+                    mContext,
+                    getString(R.string.storage_permission_required_message)
+                )
+            }
+        }
+
+    private val directoryResultLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "uri: ${result.data}")
+                val uri = result.data!!.data
+                val fileOutputStream: FileOutputStream =
+                    mContext.contentResolver.openOutputStream(uri!!) as FileOutputStream
+                val textData = ParsingTools.convertDataToString(dataList)
+                try {
+                    fileOutputStream.use { fos ->
+                        OutputStreamWriter(fos, Charsets.UTF_8).use { osw ->
+                            BufferedWriter(osw).use { bf -> bf.write(textData) }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Problem: $e")
+                }
+            }
+        }
+
+
+    private val sendFileResultLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "uri: ${result.data}")
+            } else {
+                Log.d(TAG, "Code: ${result.resultCode} || ${result.data}")
+            }
+        }
+
+
+    private fun saveFileToDevice() {
+        Log.d(TAG, "saveFileToDevice: ")
+        val fileName = "SF_${LocalDateTime.now().toString().replace('T', '_')}.csv"
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/csv"
+            putExtra(Intent.EXTRA_TITLE, fileName)
+        }
+        directoryResultLauncher.launch(intent)
+    }
 
     private fun updateDataList() {
         Log.d(TAG, "updateDataList: ")
@@ -107,36 +181,86 @@ class HistoricDataFragment(
         Log.d(TAG, "initViews:  ")
         dataRecycler = mView.findViewById(R.id.historicData_LST_networkList)
         emptyLbl = mView.findViewById(R.id.historicData_LBL_title)
-        loadingImage = mView.findViewById(R.id.historicData_IMG_loading)
-
-        val circularProgressDrawable = CircularProgressDrawable(mContext)
-        circularProgressDrawable.strokeWidth = 5f
-        circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.start()
-        loadingImage.setImageDrawable(circularProgressDrawable)
+        loadingImage = mView.findViewById(R.id.historicData_IMG_lottieLoading)
         Log.d(TAG, "initViews: setting visible")
         loadingImage.visibility = ConstraintLayout.VISIBLE
         fabMenu = mView.findViewById(R.id.stats_FAB_menu)
         fabItemSave = mView.findViewById(R.id.stats_FAB_save)
         fabItemSave.setOnClickListener {
-            saveDataToDevice()
+            if (dataList.isNotEmpty()) {
+                checkStoragePermissions()
+            } else {
+                Toast.makeText(mContext, getString(R.string.no_data_to_save), Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
         fabItemShare = mView.findViewById(R.id.stats_FAB_share)
         fabItemShare.setOnClickListener {
-            shareData()
+            if (dataList.isNotEmpty()) {
+                val fileName = "SF_${LocalDateTime.now().toString().replace('T', '_')}"
+                shareData(fileName)
+            } else {
+                Toast.makeText(mContext, getString(R.string.no_data_to_share), Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
+        fabItemChart = mView.findViewById(R.id.stats_FAB_chart)
+        fabItemChart.setOnClickListener {
+            chartData()
+        }
+    }
 
 
+    /** This method will display the current data in a chart*/
+    private fun chartData() {
+        Log.d(TAG, "chartData: ")
     }
 
     /** This method will share the presented data*/
-    private fun shareData() {
+    private fun shareData(fileName: String) {
         Log.d(TAG, "shareData: ")
+        val tempDir = mContext.cacheDir
+        val tempFile = File.createTempFile(fileName, ".csv", tempDir)
+        val fileOutputStream = FileOutputStream(tempFile)
+        val data = ParsingTools.convertDataToString(dataList)
+        try {
+            fileOutputStream.use { fos ->
+                OutputStreamWriter(fos, Charsets.UTF_8).use { osw ->
+                    BufferedWriter(osw).use { bf -> bf.write(data) }
+                }
+            }
+            fileOutputStream.close()
+
+            val mailIntent = Intent().putExtra(
+                Intent.EXTRA_STREAM, Uri.parse(
+                    "content://" +
+                            CachedFileProvider.AUTHORITY + "/" + tempFile.name
+                )
+            ).setType("application/csv")
+                .setAction(Intent.ACTION_SEND)
+            try {
+                Log.d(TAG, "shareData: Trying to send file $tempFile")
+                sendFileResultLauncher.launch(mailIntent)
+            } catch (e: Exception) {
+                Log.d(TAG, "shareData: Problem: $e")
+            }
+
+        } catch (e: Exception) {
+            Log.d(TAG, "Problem: $e")
+        }
     }
 
     /** This method will save the presented data to the device*/
-    private fun saveDataToDevice() {
-        Log.d(TAG, "saveDataToDevice: ")
+    private fun checkStoragePermissions() {
+        Log.d(TAG, "saveDataToDevice:")
+        if (CodingTools.checkPermission(
+                requireActivity(),
+                STORAGE_PERMISSION,
+                requestPermissionLauncher
+            )
+        ) {
+            saveFileToDevice()
+        }
     }
 
     /** This method will display the data on the fragment according to the type given.
