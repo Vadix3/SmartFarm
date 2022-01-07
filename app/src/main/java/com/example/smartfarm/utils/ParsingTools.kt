@@ -1,5 +1,6 @@
 package com.example.smartfarm.utils
 
+import android.os.FileUtils
 import android.util.Log
 import com.example.smartfarm.MyAppClass.Constants.DRY_WATER
 import com.example.smartfarm.MyAppClass.Constants.MODERATE_MINUS_WATER
@@ -11,6 +12,7 @@ import com.example.smartfarm.models.*
 import org.bson.Document
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 import java.lang.Exception
 
 object ParsingTools {
@@ -52,6 +54,39 @@ object ParsingTools {
         data.device = plainJson.get("device") as String
         return data
     }
+
+    /** This method will convert the datalist array to a string file*/
+    fun convertDataToString(data: ArrayList<SmartFarmData>): String {
+        Log.d(TAG, "convertDataToCSV: $data")
+
+        /**
+        var device: String = ""
+        var date: String = ""
+        var time: String = ""
+        var humidity: Double = 0.0
+        var temperature: Double = 0.0
+        var soil: Int = 0
+        var light: Int = 0
+        var uv: Int = 0
+         */
+        var totalText = ""
+        val title = "Device,Date,Time,Humidity,Temperature,Soil,Light,UV\n"
+        totalText += title
+        for (item in data) {
+            val tempLine =
+                "${item.device}," +
+                        "${item.date}," +
+                        "${item.time}," +
+                        "${item.humidity}," +
+                        "${item.temperature}," +
+                        "${item.soil}," +
+                        "${item.light}," +
+                        "${item.uv}\n"
+            totalText += tempLine
+        }
+        return totalText
+    }
+
 
     fun networkToDocument(network: SmartFarmNetwork): Document {
         Log.d(TAG, "networkToDocument: ")

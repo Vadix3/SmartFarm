@@ -3,6 +3,7 @@
     <string name="hourly">Hourly</string>
     <string name="no_data_sad">No Data :(</string>
     <string name="daily">Daily</string>
+    <string name="loading_url">https://assets2.lottiefiles.com/packages/lf20_hocmonst.json</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="yearly">Yearly</string>
@@ -47,6 +48,9 @@
     In order to grant permission go to Settings -> Apps -> SmartFarm -> Permissions and enable the "Location" permission.</string>
     <string name="location_services_required">In order to user the weather feature, the location services are needed. Please
     activate the location services and press the refresh weather button</string>
+    <string name="storage_permission_required_message">In order to save the data to the device, a storage permission is required.
+    In order to grant permission go to Settings -> Apps -> SmartFarm -> Permissions and enable the "Files and media" permission.</string>
+    <string name="file_saved_successfully">File saved successfully!</string>
     <string name="location_required">Location Required!</string>
     <string name="new_network">New Network</string>
     <string name="new_device">New Device</string>
@@ -66,6 +70,11 @@
     <string name="login">Login</string>
     <string name="signup">Signup</string>
     <string name="create">Create</string>
+    <string name="no_data_to_save">No data to save!</string>
+    <string name="no_data_to_share">No data to share!</string>
+
+    <string name="active_devices">Active devices</string>
+    <string name="my_devices">My Devices</string>
 
     <string name="please_enter_deviceID">Please enter device ID</string>
 
@@ -160,6 +169,7 @@
     <string name="asparagus">Asparagus</string>
     <string name="spring_onion">Spring onion</string>
 
+    <string name="hi">Hi</string>
     <array name="initial_slider_values">
         <item>1.0</item>
         <item>5.0</item>

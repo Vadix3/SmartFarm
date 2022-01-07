@@ -203,6 +203,40 @@ object MongoTools {
     }
 
     /**
+     * This method will fetch all the documents from the given collection
+     */
+    fun fetchAllDocuments(
+        database: String,
+        collection: String,
+        resultListener: DocumentListListener
+    ) {
+        Log.d(TAG, "fetchAllDocuments")
+        val mongoClient: MongoClient =
+            user.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(database)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(collection)!!
+        val cursor: FindIterable<Document> =
+            mongoCollection.find()
+        val resultList = arrayListOf<Document>()
+        cursor.iterator().getAsync { result ->
+            if (result != null) { // connection established
+                if (result.get() != null) {  // got results, return json of list
+                    while (result.get().hasNext()) {
+                        val temp = result.get().next()
+                        resultList.add(temp)
+                    }
+                    resultListener.getDocuments(true, resultList)
+                } else { // connection problem, return null string
+                    resultListener.getDocuments(false, null)
+                }
+            }
+        }
+    }
+
+
+    /**
      * This method will fetch the latest entry in the specified collection in the Mongo database
      * and will return it in a JSON form to the caller
      */
@@ -344,6 +378,35 @@ object MongoTools {
         }
     }
 
+    fun createUserCustomData(
+        db: String,
+        collection: String,
+        listener: ResultListener,
+        key: String,
+        value: String
+    ) {
+        Log.d(TAG, "updateUserData: TOOLS")
+        val mongoClient: MongoClient =
+            user?.getMongoClient("mongodb-atlas")!! // service for MongoDB Atlas cluster containing custom user data
+        val mongoDatabase: MongoDatabase =
+            mongoClient.getDatabase(db)!!
+        val mongoCollection: MongoCollection<Document> =
+            mongoDatabase.getCollection(collection)!!
+        mongoCollection.insertOne(Document("id", user.id).append(key, value))
+            .getAsync { result ->
+                if (result.isSuccess) {
+                    Log.d(
+                        TAG,
+                        "Inserted custom user data document. _id of inserted document: ${result.get().insertedId}"
+                    )
+                    listener.result(true, result.get().insertedId.toString())
+                } else {
+                    Log.d(TAG, "Unable to insert custom user data. Error: ${result.error}")
+                    listener.result(false, result.error.toString())
+
+                }
+            }
+    }
 
     fun getDocumentsByDayInterval(
         deviceId: String,

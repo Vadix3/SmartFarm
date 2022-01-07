@@ -82,18 +82,32 @@
             fab:fab_label="@string/share"
             fab:fab_size="mini" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/stats_FAB_chart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_bar_chart_24_white"
+            app:fab_colorNormal="@color/colorPrimary"
+            app:fab_colorPressed="@color/colorSecondary"
+            app:fab_colorRipple="@color/colorSecondary"
+            fab:fab_label="@string/share"
+            fab:fab_size="mini" />
+
+
     </com.github.clans.fab.FloatingActionMenu>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/historicData_IMG_loading"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/historicData_IMG_lottieLoading"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

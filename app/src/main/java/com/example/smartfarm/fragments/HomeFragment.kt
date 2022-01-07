@@ -21,8 +21,14 @@ import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.TAG
 import com.example.smartfarm.MyAppClass.Constants.WEATHER_DATA
 import com.example.smartfarm.R
+import com.example.smartfarm.activities.MainActivity
+import com.example.smartfarm.adapters.NetworkListAdapter
 import com.example.smartfarm.controllers.DataController
+import com.example.smartfarm.interfaces.DeviceListCallback
+import com.example.smartfarm.interfaces.NetworkListCallback
 import com.example.smartfarm.interfaces.ResultListener
+import com.example.smartfarm.models.SmartFarmDevice
+import com.example.smartfarm.models.SmartFarmNetwork
 import com.example.smartfarm.utils.CodingTools
 import com.example.smartfarm.utils.MongoTools
 import com.example.smartfarm.utils.ParsingTools
@@ -36,11 +42,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 
 import com.google.android.gms.location.LocationCallback
+import com.google.android.material.textview.MaterialTextView
 import org.json.JSONObject
-import org.w3c.dom.Document
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment(mContext: Context) : Fragment() {
@@ -52,6 +56,9 @@ class HomeFragment(mContext: Context) : Fragment() {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private lateinit var weatherPreviewFragment: WeatherPreviewFragment
+    private lateinit var deviceListFragment: DeviceListFragment
+    private lateinit var networkListFragment: NetworkListFragment
+
     private var shownLocationDialog = false // This variable will indicate if the user already saw
     // the location services message in order to not spam him
 
@@ -59,6 +66,9 @@ class HomeFragment(mContext: Context) : Fragment() {
 
     private val isWeatherLoaded = false // A variable to indicate if I already loaded weather data
     // in this fragment
+
+    private lateinit var titleLbl: MaterialTextView
+    private val dataController = DataController(mContext)
 
     // Bundle to save stuff
     private val bundle = Bundle()
@@ -377,6 +387,7 @@ class HomeFragment(mContext: Context) : Fragment() {
         if (CodingTools.isOnline(mContext)) {
             // if the weather has not been loaded already
             initLocationServices()
+            initNetworksDetailsFragment()
             if (bundle.isEmpty || bundle.get(WEATHER_DATA) == null) {
                 tryToDisplayWeather()
             } else {
@@ -398,6 +409,8 @@ class HomeFragment(mContext: Context) : Fragment() {
     private fun loadWeatherFromBundle() {
         Log.d(TAG, "loadFromBundle: ")
         val value = bundle.get(MyAppClass.Constants.WEATHER_DATA) as String
+        //TODO: Devices and networks data load from here
+        //TODO: Store their data in the bundle
         updateWeatherUI(value)
     }
 
@@ -432,12 +445,82 @@ class HomeFragment(mContext: Context) : Fragment() {
         }
     }
 
-
     /** A method that initializes the views in the fragment*/
-    private fun initViews(mView: Any) {
+    private fun initViews(mView: View) {
         Log.d(TAG, "initViews: HomeFragment")
+        var name = MongoTools.user.customData["name"] as String
+        name = name!!.split(" ").toTypedArray()[0]
+        (requireActivity() as MainActivity).changeToolbarTitle("${getString(R.string.hi)} ${name}!")
+    }
 
 
+    /** This method will initialize the networks mini fragment*/
+    private fun initNetworksDetailsFragment() {
+        Log.d(TAG, "initDeviceDetailsFragment: ")
+        //home_LAY_deviceListLayout
+        dataController.fetchAllNetworksOfUser(object : NetworkListCallback {
+            override fun getNetworks(result: Boolean, networks: ArrayList<SmartFarmNetwork>?) {
+                if (result) {
+                    networkListFragment =
+                        NetworkListFragment(
+                            mContext,
+                            networks!!,
+                            getString(R.string.my_networks),
+                            object : ResultListener {
+                                override fun result(result: Boolean, message: String) {
+                                    if (result) {
+                                        Log.d(TAG, "result: User clicked on:$message")
+                                    }
+                                }
+                            })
+                    CodingTools.switchFragment(
+                        childFragmentManager,
+                        R.id.home_LAY_networkListLayout,
+                        networkListFragment,
+                        false,
+                        ""
+                    )
+                } else {
+                    //TODO: Why wont you add a device?
+                }
+                initDeviceDetailsFragment()
+            }
+        })
+    }
+
+
+    /** This method will initialize the devices mini fragment*/
+    private fun initDeviceDetailsFragment() {
+        Log.d(TAG, "initDeviceDetailsFragment: ")
+        //home_LAY_deviceListLayout
+        dataController.fetchAllDevicesOfUser(object : DeviceListCallback {
+            override fun getDevices(result: Boolean, devices: ArrayList<SmartFarmDevice>?) {
+                if (result) {
+                    deviceListFragment =
+                        DeviceListFragment(
+                            mContext,
+                            devices!!,
+                            getString(R.string.my_devices),
+                            object : ResultListener {
+                                override fun result(result: Boolean, message: String) {
+                                    if (result) {
+                                        Log.d(TAG, "result: User clicked on:$message")
+                                    }
+                                }
+
+                            })
+                    CodingTools.switchFragment(
+                        childFragmentManager,
+                        R.id.home_LAY_deviceListLayout,
+                        deviceListFragment,
+                        false,
+                        ""
+                    )
+                } else {
+                    //TODO: Why wont you add a device?
+                }
+            }
+        })
     }
 
     /** This method will stop the location requests*/

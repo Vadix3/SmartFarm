@@ -1,6 +1,7 @@
 package com.example.smartfarm.fragments
 
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.airbnb.lottie.LottieAnimationView
 import com.example.smartfarm.MyAppClass
 import com.example.smartfarm.MyAppClass.Constants.NETWORK_LIST
 import com.example.smartfarm.MyAppClass.Constants.TAG
@@ -47,7 +49,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
     private var networkList = arrayListOf<SmartFarmNetwork>()// list of network object
     private lateinit var createNetworkBtn: FloatingActionButton // fab to add networks
     private lateinit var networkRecycler: RecyclerView  // recyclerView of the networks
-    private lateinit var loadingImg: ShapeableImageView
+    private lateinit var lottieLoading: LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +75,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
                 loadFromCloud()
             } else {
                 loadFromBundle()
-                loadingImg.visibility = ConstraintLayout.GONE
+                lottieLoading.visibility = ConstraintLayout.GONE
             }
         } else {
             loadDataFromSP()
@@ -127,7 +129,7 @@ class NetworksFragment(mContext: Context) : Fragment() {
                 if (result) {
                     networkList = networks!! // insert the fetched documents
                     updateNetworkList() // refresh the document list
-                    loadingImg.visibility = ConstraintLayout.GONE
+                    lottieLoading.visibility = ConstraintLayout.GONE
                 } else {
                     if (networks == null) {
                         CodingTools.displayToast(
@@ -239,13 +241,6 @@ class NetworksFragment(mContext: Context) : Fragment() {
         createNetworkBtn.setOnClickListener {
             openNewNetworkDialog()
         }
-        loadingImg = mView.findViewById(R.id.networks_IMG_loading)
-        val circularProgressDrawable = CircularProgressDrawable(mContext)
-        circularProgressDrawable.strokeWidth = 5f
-        circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.start()
-        loadingImg.setImageDrawable(circularProgressDrawable)
-        Log.d(TAG, "initViews: setting visible")
-        loadingImg.visibility = ConstraintLayout.VISIBLE
+        lottieLoading = mView.findViewById(R.id.networks_IMG_lottieLoading)
     }
 }

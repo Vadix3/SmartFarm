@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/no_data_sad"
+        android:text="@string/no_data_for_given_time"
         android:textColor="@color/colorSecondary"
         android:textSize="20dp"
         android:textStyle="bold"

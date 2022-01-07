@@ -18,10 +18,12 @@ class MyAppClass : Application() {
         const val DEVICES_COLLECTION = "devices"
         const val NETWORKS_COLLECTION = "networks"
         const val COMMANDS_COLLECTION = "commands"
+        const val USER_DATA_COLLECTION = "user_data"
         const val BT_MODE = "qr"
         const val QR_MODE = "bt"
         const val LOCATION_PERMISSION = 0
         const val CAMERA_PERMISSION = 1
+        const val STORAGE_PERMISSION = 2
         const val NETWORK_LIST = "networkList"
         const val DEVICE_LIST = "deviceList"
         const val WEATHER_DATA = "weatherData"
@@ -54,7 +56,6 @@ class MyAppClass : Application() {
         const val UV_EXPOSURE = 3
         const val DATE = 5
         const val TIME = 6
-
 
 
         /**
