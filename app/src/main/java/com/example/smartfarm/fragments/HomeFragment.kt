@@ -115,7 +115,7 @@ class HomeFragment(mContext: Context) : Fragment() {
         locationRequest.interval = 200;
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                if (locationResult == null) {
+                if (locationResult.equals(null)) {
                     Log.d(TAG, "onLocationResult: null location")
                     return
                 }

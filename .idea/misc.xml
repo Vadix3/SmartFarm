@@ -18,6 +18,7 @@
         <entry key="app/src/main/res/layout/dialog_new_network.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_produce_tip.xml" value="0.22906354560774064" />
         <entry key="app/src/main/res/layout/fragment_any_details.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_chart_bar.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_data.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_data_row.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_date_picker.xml" value="0.15833333333333333" />
