@@ -3,7 +3,6 @@ package com.example.smartfarm.fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,11 +40,18 @@ import java.time.*
 import android.app.Activity
 import android.net.Uri
 
-import androidx.activity.result.ActivityResultCallback
-
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import com.example.smartfarm.adapters.BarChartListAdapter
+import com.example.smartfarm.models.MicroData
 import com.example.smartfarm.utils.CachedFileProvider
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import java.io.BufferedWriter
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
@@ -78,7 +84,15 @@ class HistoricDataFragment(
     private val controller = controller
     private val deviceId = deviceId
 
+    /** A flag to indicate if a chart is showing and not a list*/
+    private var isShowingChart = false
+
+    /** A flag to indicate if the chart has already been loaded*/
+    private var drewChart = false
+
     private lateinit var dataRecycler: RecyclerView
+    private lateinit var chartRecycler: RecyclerView
+
     private lateinit var emptyLbl: MaterialTextView
     private lateinit var loadingImage: LottieAnimationView
     private var dataList = arrayListOf<SmartFarmData>()
@@ -87,6 +101,8 @@ class HistoricDataFragment(
     private lateinit var fabItemSave: FloatingActionButton
     private lateinit var fabItemShare: FloatingActionButton
     private lateinit var fabItemChart: FloatingActionButton
+
+    private lateinit var barChart: BarChart
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -179,7 +195,8 @@ class HistoricDataFragment(
 
     private fun initViews(mView: View) {
         Log.d(TAG, "initViews:  ")
-        dataRecycler = mView.findViewById(R.id.historicData_LST_networkList)
+        dataRecycler = mView.findViewById(R.id.historicData_LST_dataList)
+        chartRecycler = mView.findViewById(R.id.historicData_LST_chartList)
         emptyLbl = mView.findViewById(R.id.historicData_LBL_title)
         loadingImage = mView.findViewById(R.id.historicData_IMG_lottieLoading)
         Log.d(TAG, "initViews: setting visible")
@@ -206,7 +223,29 @@ class HistoricDataFragment(
         }
         fabItemChart = mView.findViewById(R.id.stats_FAB_chart)
         fabItemChart.setOnClickListener {
-            chartData()
+            if (!drewChart) { // draw first chart and show it
+                chartData()
+            } else { // chart already happened, switch between chart and list
+                fabMenu.close(true)
+
+                // already showing chart,
+                // show list:
+                // - set isShowingChart to false
+                // - set icon to chart
+                // - hide chart layout
+                // - show list layout
+                if (isShowingChart) {
+                    isShowingChart = false
+                    fabItemChart.setImageResource(R.drawable.ic_baseline_bar_chart_24_white)
+                    chartRecycler.visibility = RelativeLayout.INVISIBLE
+                    dataRecycler.visibility = RelativeLayout.VISIBLE
+                } else {
+                    isShowingChart = true
+                    fabItemChart.setImageResource(R.drawable.ic_baseline_list_24)
+                    dataRecycler.visibility = RelativeLayout.INVISIBLE
+                    chartRecycler.visibility = RelativeLayout.VISIBLE
+                }
+            }
         }
     }
 
@@ -214,6 +253,60 @@ class HistoricDataFragment(
     /** This method will display the current data in a chart*/
     private fun chartData() {
         Log.d(TAG, "chartData: ")
+        if (dataList.isEmpty()) {
+            Toast.makeText(mContext, R.string.no_data_to_chart, Toast.LENGTH_SHORT).show()
+        } else {
+            dataRecycler.visibility = RelativeLayout.INVISIBLE // hide data list
+            chartRecycler.visibility = RelativeLayout.VISIBLE // show chart list
+            fabMenu.close(true)
+
+            //Data sets of Micro data
+            val humidityList = arrayListOf<MicroData>()
+            val temperatureList = arrayListOf<MicroData>()
+            val soilList = arrayListOf<MicroData>()
+            val lightList = arrayListOf<MicroData>()
+            val uvList = arrayListOf<MicroData>()
+
+            for (item in dataList) {
+                if (item.humidity != -999.0) { // not null item
+                    humidityList.add(MicroData(item.date, item.time, item.humidity.toString()))
+                }
+                if (item.temperature != -999.0) { // not null item
+                    temperatureList.add(
+                        MicroData(
+                            item.date,
+                            item.time,
+                            item.temperature.toString()
+                        )
+                    )
+                }
+
+                if (item.light != -999) { // not null item
+                    lightList.add(MicroData(item.date, item.time, item.light.toString()))
+                }
+                if (item.uv != -999) { // not null item
+                    uvList.add(MicroData(item.date, item.time, item.uv.toString()))
+                }
+                if (item.soil != -999) { // not null item
+                    soilList.add(MicroData(item.date, item.time, item.soil.toString()))
+                }
+            }
+
+            val allData = arrayListOf<ArrayList<MicroData>>()
+            allData.add(humidityList)
+            allData.add(temperatureList)
+            allData.add(lightList)
+            allData.add(humidityList)
+            allData.add(humidityList)
+
+            val adapter = BarChartListAdapter(mContext, allData)
+            chartRecycler.adapter = adapter
+            drewChart = true
+            isShowingChart = true
+            fabItemChart.setImageResource(R.drawable.ic_baseline_list_24)
+            dataRecycler.visibility = RelativeLayout.INVISIBLE
+            chartRecycler.visibility = RelativeLayout.VISIBLE
+        }
     }
 
     /** This method will share the presented data*/

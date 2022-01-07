@@ -60,6 +60,7 @@
     <string name="device_already_active">Device already active</string>
     <string name="there_are_no_devices">There are no devices in this network</string>
     <string name="permission_missing">Permission Missing!</string>
+
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -72,6 +73,7 @@
     <string name="create">Create</string>
     <string name="no_data_to_save">No data to save!</string>
     <string name="no_data_to_share">No data to share!</string>
+    <string name="no_data_to_chart">No data to chart!</string>
 
     <string name="active_devices">Active devices</string>
     <string name="my_devices">My Devices</string>

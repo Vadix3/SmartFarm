@@ -17,7 +17,7 @@
         app:layout_constraintVertical_bias="0" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historicData_LST_networkList"
+        android:id="@+id/historicData_LST_dataList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="10dp"
@@ -26,6 +26,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/historicData_LAY_pickerFrame" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historicData_LST_chartList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:padding="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/historicData_LAY_pickerFrame" />
+
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/historicData_LBL_title"
@@ -50,6 +65,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
         android:src="@drawable/ic_baseline_more_horiz_24"
+        app:menu_icon="@drawable/ic_baseline_more_horiz_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"

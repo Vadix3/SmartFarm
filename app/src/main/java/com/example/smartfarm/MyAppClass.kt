@@ -35,6 +35,13 @@ class MyAppClass : Application() {
         const val CHANGE_DURATION_COMMAND = 0
 
 
+
+        const val HUMIDITY_ID = 0
+        const val TEMPERATURE_ID = 1
+        const val SOIL_ID = 2
+        const val LIGHT_ID = 3
+        const val UV_ID = 4
+
         // hourly, daily, weekly, monthly, yearly, date_interval
 
         const val HOURLY = 0
